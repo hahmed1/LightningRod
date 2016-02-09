@@ -9,13 +9,14 @@ int find(const char *name, struct address *head)
 	return 0;	
 }
 
+//TODO test more thoroughly
 int simple_find(const char *name, char *address)
 {
-	struct addrinfo hints, *res, *tmp;
+	struct addrinfo hints, *res; 
 	int err;
-	//char ipstr[INET6_ADDRSTRLEN];
-	char *ipver;
 	void *addr;
+	char temp[INET6_ADDRSTRLEN];
+	
 	//0 out memory and fill-in values
 	memset(&hints, 0, sizeof hints);
 	hints.ai_family = AF_UNSPEC;
@@ -26,21 +27,21 @@ int simple_find(const char *name, char *address)
 		fprintf(stderr, "getaddrinfo: %s\n" , gai_strerror(err));
 		return ADDR_NOT_FOUND; 
 	}
-	
-	tmp = res;
-	if(tmp->ai_family == AF_INET){
-		struct sockaddr_in *ipv4 = (struct sockaddr_in *)tmp->ai_addr;
-		
-		ipver = "IPv4";
+
+	// relying on short-circuit evaluation to not deref NULL
+	while(res != NULL && (res->ai_family != AF_INET)){
+		res = res->ai_next;
+	}
+	if(res->ai_family == AF_INET){
+		struct sockaddr_in *ipv4 = (struct sockaddr_in *)res->ai_addr;
 		addr = &(ipv4->sin_addr);	
 	} else {
 	
-		struct sockaddr_in6 *ipv6 = (struct sockaddr_in6 *)tmp->ai_addr;
-		ipver = "IPv6";
+		struct sockaddr_in6 *ipv6 = (struct sockaddr_in6 *)res->ai_addr;
 		addr = &(ipv6->sin6_addr);
 	}
-	char temp[INET6_ADDRSTRLEN];
-	inet_ntop(tmp->ai_family, addr, temp, sizeof temp);
+
+	inet_ntop(res->ai_family, addr, temp, sizeof temp);
 	strcpy(address, temp);
 	return 0;
 }
