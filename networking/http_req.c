@@ -141,10 +141,11 @@ int main(int argc, char **argv)
 	 *
 	 */
 	char bbuff[10000] = {0};
-	msg = "GET / HTTP/1.1\r\nHost: www.example.com\r\nConnection: keep-alive\r\n\r\n";	
+	msg = "\r\n\r\nGET / HTTP/1.1\r\nHost: www.example.com\r\n\r\n";	
+	
 	printf("Message:\n%s\n", msg);
-	sent = send(sockfd, msg, sizeof msg, 0);
-	printf("%d of %d bytes sent\n" , sent , sizeof msg);
+	sent = send(sockfd, msg, strlen(msg), 0);
+	printf("%d of %d bytes sent\n" , sent , strlen(msg));
 	recvd = recv(sockfd, bbuff, sizeof bbuff, 0);
 	if(recvd)
 		printf("%d of %d bytes recieved\n", recvd , sizeof bbuff);	
