@@ -1,8 +1,19 @@
-#include "network.h"
 #include <string.h>
+
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
+#include <string.h>
+#include <netdb.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+
+#include <arpa/inet.h>
+
+
+
 /* Perform a DNS lookup of argv[1],
  * make a socket,  
  * establish a TCP connection,
@@ -10,7 +21,14 @@
  */
 
 #define MSG_LEN 500
+void *get_in_addr(struct sockaddr *sa)
+{
+	if (sa->sa_family == AF_INET) {
+		return &(((struct sockaddr_in*)sa)->sin_addr);
+	}
 
+	return &(((struct sockaddr_in6*)sa)->sin6_addr);
+}
 int main(int argc, char **argv)
 {
 	int status, sockfd;
@@ -31,9 +49,9 @@ int main(int argc, char **argv)
 	domain = "www.example.com";	
 	//domain = argv[1];
 
-	if((status = getaddrinfo(domain, NULL, &hints, &res )) != 0 ){
+	if((status = getaddrinfo(domain, "http", &hints, &res )) != 0 ){
 		fprintf(stderr, "getaddrinfo: %s\n" , gai_strerror(status));
-         	return ADDR_NOT_FOUND;
+         	return 1;
 	}
 
 	/*
@@ -70,19 +88,20 @@ int main(int argc, char **argv)
 		return 1;
 
 	}	*/
-
+	/*
 	struct sockaddr_in test;
 	memset(&test, 0, sizeof test);
 	test = *(struct sockaddr_in *)(res->ai_addr); 
 	int sizz = sizeof res->ai_addr;
 	int szz = test.sin_len;
 	//test.sin_len = sizeof( struct sockaddr_in);	
+	*/
 	for(; res != NULL; res = res->ai_next){
 		if((sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol)) == -1){
 			fprintf(stderr, "socket error: %s\n" , strerror(errno));
 			continue;
 		}
-		if(connect(sockfd,(struct sockaddr *) &test, res->ai_addrlen) == -1){
+		if(connect(sockfd, res->ai_addr, res->ai_addrlen) == -1){
 			close(sockfd);
 			fprintf(stderr, "failed to create connection: %s\n" , strerror(errno));	
 			fprintf(stderr, "errno: %d\n" , errno);
@@ -93,6 +112,9 @@ int main(int argc, char **argv)
 	}
 
 	puts("Connection success");
+	char s[INET6_ADDRSTRLEN];
+	inet_ntop(res->ai_family, get_in_addr((struct sockaddr *)res->ai_addr), s, sizeof s);
+	printf("connection to %s\n" , s);
 	/*
 	while((err = connect(sockfd, res->ai_addr, res->ai_addrlen)) != 0){
 		fprintf(stderr, "failed to create connection: %s\n" , strerror(errno));	
@@ -116,14 +138,18 @@ int main(int argc, char **argv)
 	/*
 	 * Create a valid HTTP GET request
 	 *
-	 */	
-	/*	
-	msg = "\n\nGET / HTTP/1.1\nHostname: www.example.com\n\n"; 		
-	send(sockfd, msg, sizeof msg, 0);
-	recv(sockfd, buffer, sizeof msg, 0);
-
+	 */
+	char bbuff[1000] = {0};	
+	msg = "GET / HTTP/1.1\r\nHost: www.example.com\r\nConnection: keep-alive\r\n\r\n"; 		
+	printf("Message:\n%s\n", msg);
+	sent = send(sockfd, msg, sizeof msg, 0);
+	printf("%d of %d bytes sent\n" , sent , sizeof msg);
+	recvd = recv(sockfd, bbuff, sizeof msg, 0);
+	if(recvd)
+		printf("%d of %d bytes recieved", recvd , sizeof buffer);	
+	else
+		printf("Conection dropped unexpectedly\n");
 	printf("%s\n" , buffer);
-	*/
 	freeaddrinfo(res);
 	close(sockfd);	
 	return 0;
