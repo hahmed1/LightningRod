@@ -115,6 +115,7 @@ int main(int argc, char **argv)
 	char s[INET6_ADDRSTRLEN];
 	inet_ntop(res->ai_family, get_in_addr((struct sockaddr *)res->ai_addr), s, sizeof s);
 	printf("connection to %s\n" , s);
+	
 	/*
 	while((err = connect(sockfd, res->ai_addr, res->ai_addrlen)) != 0){
 		fprintf(stderr, "failed to create connection: %s\n" , strerror(errno));	
@@ -139,17 +140,17 @@ int main(int argc, char **argv)
 	 * Create a valid HTTP GET request
 	 *
 	 */
-	char bbuff[1000] = {0};	
-	msg = "GET / HTTP/1.1\r\nHost: www.example.com\r\nConnection: keep-alive\r\n\r\n"; 		
+	char bbuff[10000] = {0};
+	msg = "GET / HTTP/1.1\r\nHost: www.example.com\r\nConnection: keep-alive\r\n\r\n";	
 	printf("Message:\n%s\n", msg);
 	sent = send(sockfd, msg, sizeof msg, 0);
 	printf("%d of %d bytes sent\n" , sent , sizeof msg);
-	recvd = recv(sockfd, bbuff, sizeof msg, 0);
+	recvd = recv(sockfd, bbuff, sizeof bbuff, 0);
 	if(recvd)
-		printf("%d of %d bytes recieved", recvd , sizeof buffer);	
+		printf("%d of %d bytes recieved\n", recvd , sizeof bbuff);	
 	else
 		printf("Conection dropped unexpectedly\n");
-	printf("%s\n" , buffer);
+	printf("%s\n" , bbuff);
 	freeaddrinfo(res);
 	close(sockfd);	
 	return 0;
