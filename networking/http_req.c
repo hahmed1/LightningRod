@@ -65,7 +65,10 @@ int main(int argc, char **argv)
 
 		break;
 	}
-
+	if(res == NULL){
+		fprintf(stderr, "no valid addresses found\n");
+		return 1;
+	}
 	puts("Connection success");
 	char s[INET6_ADDRSTRLEN];
 	inet_ntop(res->ai_family, get_in_addr((struct sockaddr *)res->ai_addr), s, sizeof s);
@@ -83,10 +86,10 @@ int main(int argc, char **argv)
 	
 	printf("Message:\n%s\n", msg);
 	sent = send(sockfd, msg, strlen(msg), 0);
-	printf("%d of %d bytes sent\n" , sent ,strlen(msg));
+	printf("%zu of %lu bytes sent\n" , sent ,strlen(msg));
 	recvd = recv(sockfd, bbuff, sizeof bbuff, 0);
 	if(recvd)
-		printf("%d of %d bytes recieved\n", recvd , sizeof bbuff);	
+		printf("%zu of %lu bytes recieved\n", recvd , sizeof bbuff);	
 	else
 		printf("Conection dropped unexpectedly\n");
 	printf("%s\n" , bbuff);
