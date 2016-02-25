@@ -1,6 +1,6 @@
 #include <string.h>
 #include <stdio.h>
-
+#include "network.h"
 /*
  * URL processing
  *
@@ -28,23 +28,31 @@ int url_parse(char *url, char *base, char *resource)
 	char *c  ;
         int size ;	
 	int i    ;
+	int index;	
 	
 	c = NULL;
 	size = strlen(url);
 	i = 0;
-
 
 	/* Clear out any garbage */
 	memset(base , 0, sizeof(*base));
 	memset(resource, 0, sizeof(*resource));
 	
 	char *stop= strchr(url , '/');
-	int index = stop - url;
-	printf("%d\n" , index);
-	strncpy(base, url, index);
-	base[index] = '\0';
-	strcpy(resource, &url[index]);	
-	
+	index = stop - url;
+
+	if(index < 0){
+		strcpy(base , url);
+		strcpy(resource, "/");
+	}
+
+	else{
+		
+		strncpy(base, url, index);
+		base[index] = '\0';
+		strcpy(resource, &url[index]);	
+
+	}
 	return 0;
 }
 

@@ -24,7 +24,7 @@
 #include <netinet/in.h>
 
 int get(char *domain, char *resource, char *result); 
-
+int url_parse(char *url, char *base, char *resource);
 #define ADDR_NOT_FOUND  -1
 
 
