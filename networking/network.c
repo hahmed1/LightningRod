@@ -72,16 +72,18 @@ int get(char *domain, char *resource, char *result)
 	sent = send(sockfd, msg, strlen(msg), 0);
 	printf("%zu of %lu bytes sent\n" , sent ,strlen(msg));
 	recvd = recv(sockfd, bbuff, sizeof bbuff, 0);
-	int total = 0;
 	
-	
+
 	//TODO parse header to get Content-Length to see if all data sent
 
-
+	/*
 	if(recvd)
 		printf("%zu of %lu bytes recieved\n", recvd , sizeof bbuff);	
 	else
 		printf("Conection dropped unexpectedly\n");
+	*/
+		
+
 	printf("%s\n" , bbuff);
 	freeaddrinfo(res);
 	close(sockfd);	
