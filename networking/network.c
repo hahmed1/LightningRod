@@ -4,9 +4,12 @@
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
-
+#include "parser.h" 
 #define MSG_LEN 1000
 #define BUF_SIZE 10000
+
+int content_size;
+int html_len;
 static void *get_in_addr(struct sockaddr *sa)
 {
 	if (sa->sa_family == AF_INET) {
@@ -14,6 +17,67 @@ static void *get_in_addr(struct sockaddr *sa)
 	}
 
 	return &(((struct sockaddr_in6*)sa)->sin6_addr);
+}
+
+void get_num(char *text)
+{
+	char *stop;
+	char c;
+	int i;
+
+	char number[BUF_SIZE];
+	for(i = 0; i < strlen(text); ++i){
+		c = text[i];
+		if(c == ':')
+			break;
+
+	}
+	++i;
+
+	
+	if(strlen(&text[i]) < BUF_SIZE){
+		strcpy(number , &text[i]);	
+		content_size = atoi(number);
+	}
+	
+	printf("content size: %d\n" , content_size);
+}
+
+void get_html(char *text)
+{
+	html_len = strlen(text);
+	printf("html len: %d\n" , html_len );
+}
+static void check_buffer(char *buffer, int recvd)
+{
+
+	YY_BUFFER_STATE cur_buff;
+	cur_buff = yy_scan_string(buffer);
+
+	content_size = 0;	
+	yylex();
+	if(content_size <= 0){
+		printf("ERROR\n");	
+	}
+	else{
+		if(html_len < content_size){
+			printf("INCOMPLETE READ\n");	
+		}
+	}
+	yy_delete_buffer(cur_buff);	
+
+}
+
+static void recv_data(int sock )
+{
+	int recvd;
+	char buffer[BUF_SIZE];
+	recvd = recv(sock, buffer, sizeof buffer, 0);
+	printf("Size: %ld\n" , sizeof buffer);
+	printf("receieved %d\n", recvd);
+	check_buffer(buffer , recvd);		
+	
+	printf("%s\n" , buffer);
 }
 
 int get(char *domain, char *resource, char *result)
@@ -61,7 +125,7 @@ int get(char *domain, char *resource, char *result)
 	 *
 	 */
 	
-	char bbuff[BUF_SIZE] = {0};
+//	char bbuff[BUF_SIZE] = {0};
 	char output[BUF_SIZE] = {0};
 	char msg[1000] = {0};
 	strcat(msg,  "\r\n\r\nGET / HTTP/1.1\r\nHost: ");
@@ -71,8 +135,8 @@ int get(char *domain, char *resource, char *result)
 	printf("Message:\n%s\n", msg);
 	sent = send(sockfd, msg, strlen(msg), 0);
 	printf("%zu of %lu bytes sent\n" , sent ,strlen(msg));
-	recvd = recv(sockfd, bbuff, sizeof bbuff, 0);
-	
+//	recvd = recv(sockfd, bbuff, sizeof bbuff, 0);
+	recv_data(sockfd);	
 
 	//TODO parse header to get Content-Length to see if all data sent
 
@@ -83,8 +147,7 @@ int get(char *domain, char *resource, char *result)
 		printf("Conection dropped unexpectedly\n");
 	*/
 		
-
-	printf("%s\n" , bbuff);
+//	printf("Buffer : %s\n" , bbuff);	
 	freeaddrinfo(res);
 	close(sockfd);	
 
