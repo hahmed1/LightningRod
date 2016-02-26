@@ -1,4 +1,3 @@
-#include "network.h"
 #include <stdio.h> 
 #include <string.h>
 #include <stdlib.h>
@@ -7,7 +6,14 @@
  * Parse the response header for content length.  To be used with flex lexer
  */
 #define BUFSIZE 100
-int get_num(char *text)
+void get_html(char *text)
+{
+	printf("Found text : %s\n" , text);
+	printf("End of text seg\n ");
+}
+
+
+void get_num(char *text)
 {
 	char *stop;
 	char c;
@@ -32,11 +38,8 @@ int get_num(char *text)
 
 //		printf("THE LENGTH IS %d\n" , num);
 
-		return num;	
 	}
 
-	else
-		return -1;	
 }
 
 
