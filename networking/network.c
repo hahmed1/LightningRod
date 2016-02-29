@@ -72,7 +72,7 @@ static void seturl(char * url)
      	 curl_easy_setopt(curl_handle, CURLOPT_URL, url);
 }
 
-int lookup(char *url)
+long lookup(char *url, char *output)
 {
   	  initialize();
 	  seturl(url);
@@ -105,8 +105,10 @@ int lookup(char *url)
 		 *      * Do something nice with it!
 		 *                          */
 
-		printf("%lu bytes retrieved\n", (long)chunk.size);
-		printf("Data: %s\n" , chunk.memory);		 
+		//printf("%lu bytes retrieved\n", (long)chunk.size);
+		//printf("Data: %s\n" , chunk.memory);		 
+	  
+	  	memcpy(output, chunk.memory, chunk.size + 1);
 	  }
 
 	  /* cleanup curl stuff */
@@ -114,7 +116,7 @@ int lookup(char *url)
 
 	  free(chunk.memory);
 
-       	  return 0;
+       	  return chunk.size;
 
 }
 
@@ -130,12 +132,21 @@ void cleanup()
 #include <stdio.h>
 int main(int argc , char **argv)
 {
+	char data[5000]; 
+	long size;
+	char *url;
+
 	if(argc != 2){
 		printf("Usage: ./a.out url\n");
 		exit(1);
 	}
-	char *url = argv[1];		
-	lookup(url);	
+
+	url = argv[1];		
+
+	
+	size = lookup(url, data);
+	printf("Size: %lu \n" , size );
+	printf("BEGIN DATA: %s\n" , data);	
 	cleanup();	
 }
 #endif
