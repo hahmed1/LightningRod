@@ -3,6 +3,23 @@
 
 #include <curl/curl.h>
 #define STANDALONE_TEST 1
+
+
+/*
+ * Implementation of the network interface
+ * Uses libcurl
+ *
+ */
+
+/*
+ * Globals
+ */
+CURL *curl_handle;
+CURLcode res;
+
+
+
+
 /*
  * A resizable memory chunk.  
  *
@@ -34,39 +51,49 @@ WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
 
 	 return realsize;
 }
+
+void initialize()
+{
+	 curl_global_init(CURL_GLOBAL_ALL);
+
+	 /* init the curl session */
+	 curl_handle = curl_easy_init();
+	 
+	 /* Handle redirects */
+	 curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
+	 /* some servers don't like requests that are made without a user-agent
+     	  field, so we provide one */
+          curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
+
+
+}
+
+static void seturl(char * url)
+{
+	
+ 	 /* specify URL to get */
+     	 curl_easy_setopt(curl_handle, CURLOPT_URL, url);
+}
+
 int lookup(char *url)
 {
-	  CURL *curl_handle;
-	  CURLcode res;
-
-	  struct MemoryStruct chunk;
+  	  initialize();
+	  seturl(url);
+ 
+ 	  struct MemoryStruct chunk;
 
 	  chunk.memory = malloc(1);  /* will be grown as needed by the realloc above */
 	  chunk.size = 0;    /* no data at this point */
 
-	  curl_global_init(CURL_GLOBAL_ALL);
 
-	  /* init the curl session */
-	  curl_handle = curl_easy_init();
-
-	  /* specify URL to get */
-       	  curl_easy_setopt(curl_handle, CURLOPT_URL, url);
-
-	  /* Handle redirects */
-	  curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
-
-
+	 
        	  /* send all data to this function  */
 	  curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
 
    	  /* we pass our 'chunk' struct to the callback function */
 	  curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&chunk);
 
-          /* some servers don't like requests that are made without a user-agent
-     	  field, so we provide one */
-          curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
-
- 	  /* get it! */
+          	  /* get it! */
 	  res = curl_easy_perform(curl_handle);
 
 	  /* check for errors */
