@@ -8,8 +8,13 @@
 #define MSG_LEN 1000
 #define BUF_SIZE 10000
 
+
+//Globals 
 int content_size;
 int html_len;
+
+static void recv_data(int , char *);
+
 static void *get_in_addr(struct sockaddr *sa)
 {
 	if (sa->sa_family == AF_INET) {
@@ -38,49 +43,74 @@ void get_num(char *text)
 	if(strlen(&text[i]) < BUF_SIZE){
 		strcpy(number , &text[i]);	
 		content_size = atoi(number);
+		//TODO error check
 	}
 	
 	printf("content size: %d\n" , content_size);
 }
 
+/*
+ * This function works with the underlying assumption that
+ * all HTML files begin with the line '<!doctype html>' or 
+ * <!DOCTYPE html>. Else, behavior is undefined, and errors are likely to 
+ * ensue.  
+ *
+ * TODO handle (or, at the least detect) malformed HTML documents.
+ *
+ */
 void get_html(char *text)
 {
 	html_len = strlen(text);
 	printf("html len: %d\n" , html_len );
 }
-static void check_buffer(char *buffer, int recvd)
+static void check_buffer(char *buffer,  const int sock)
 {
 
 	YY_BUFFER_STATE cur_buff;
 	cur_buff = yy_scan_string(buffer);
 
-	content_size = 0;	
+	//zero out the globals
+	content_size = 0;
+	html_len = 0;	
+
+	// calling yylex changes the two globals
 	yylex();
+
+
 	if(content_size <= 0){
-		printf("ERROR\n");	
+		printf("ERROR, no content length provided\n");	
 	}
 	else{
 		if(html_len < content_size){
-			printf("INCOMPLETE READ\n");	
+			recv_data(sock , buffer);	
 		}
 	}
 	yy_delete_buffer(cur_buff);	
 
 }
 
-static void recv_data(int sock )
+/*
+ * IMPORTANT: This assumes that buffer is atleast of size BUF_SIZE
+ *  
+ */
+static void recv_data( int sock , char *buffer )
 {
-	int recvd;
-	char buffer[BUF_SIZE];
-	recvd = recv(sock, buffer, sizeof buffer, 0);
-	printf("Size: %ld\n" , sizeof buffer);
-	printf("receieved %d\n", recvd);
-	check_buffer(buffer , recvd);		
+	char tmp[BUF_SIZE];
+	recv(sock, tmp, sizeof tmp, 0);
 	
-	printf("%s\n" , buffer);
+	if(strlen(tmp) < (BUF_SIZE - strlen(buffer))){
+		strcat(buffer, tmp);
+	} else{
+		printf("Insufficient memory error\n");
+		exit(-1);
+	}
+
+
+	check_buffer(buffer , sock);		
+	
 }
 
-int get(char *domain, char *resource, char *result)
+char* get(char *domain, char *resource, char *result)
 {
 	int status, sockfd;
 	struct addrinfo hints,   *res;
@@ -136,8 +166,11 @@ int get(char *domain, char *resource, char *result)
 	sent = send(sockfd, msg, strlen(msg), 0);
 	printf("%zu of %lu bytes sent\n" , sent ,strlen(msg));
 //	recvd = recv(sockfd, bbuff, sizeof bbuff, 0);
-	recv_data(sockfd);	
-
+//	char *output = (char *)malloc(BUF_SIZE);
+	
+	recv_data(sockfd, output);	
+	printf("Output buffer: %s\n" , output );
+	
 	//TODO parse header to get Content-Length to see if all data sent
 
 	/*

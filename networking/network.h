@@ -23,7 +23,7 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
-int get(char *domain, char *resource, char *result); 
+char * get(char *domain, char *resource, char *result); 
 int url_parse(char *url, char *base, char *resource);
 void get_num(char *);
 void get_html(char *);

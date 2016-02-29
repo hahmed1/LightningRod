@@ -11,4 +11,5 @@
 %%
 Content-Length:[ ]*[0-9]+			get_num(yytext); 
 \<!doctype\ html\>[^\0]*			get_html(yytext);	
+\<!DOCTYPE\ html\>[^\0]*			get_html(yytext);	
 %%
