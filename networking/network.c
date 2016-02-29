@@ -14,11 +14,8 @@
 /*
  * Globals
  */
-CURL *curl_handle;
-CURLcode res;
-
-
-
+static CURL *curl_handle;
+static CURLcode res;
 
 /*
  * A resizable memory chunk.  
@@ -117,10 +114,16 @@ int lookup(char *url)
 
 	  free(chunk.memory);
 
-       	  /* we're done with libcurl, so clean it up */
-	  curl_global_cleanup();
+       	  return 0;
 
-	  return 0;
+}
+
+void cleanup()
+{
+
+	/* we're done with libcurl, so clean it up */
+  	curl_global_cleanup();
+
 
 }
 #ifdef STANDALONE_TEST
@@ -133,6 +136,6 @@ int main(int argc , char **argv)
 	}
 	char *url = argv[1];		
 	lookup(url);	
-	
+	cleanup();	
 }
 #endif
