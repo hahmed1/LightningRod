@@ -112,7 +112,9 @@ char *net_get(char *url, size_t *size)
 	  	int bsize = chunk.size;
 		char *buff = (char *)malloc(bsize);
 		*size = bsize;  
-		buff = chunk.memory;
+		//buff = chunk.memory;
+		memcpy(buff, chunk.memory, bsize);
+		free(chunk.memory);
 		return buff;
 	  }
 
@@ -136,8 +138,6 @@ void net_cleanup()
 int main(int argc , char **argv)
 {
 	
-	
-
 	char *data; 
 	size_t size;
 	char *url;
