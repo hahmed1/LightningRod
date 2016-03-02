@@ -1,13 +1,13 @@
 #include <stdlib.h>
 #include <string.h>
-
+#include "network.h"
 #include <curl/curl.h>
 #define STANDALONE_TEST 1
 
+//TODO Check for memory leaks
 
 /*
  * Implementation of the network interface
- * Uses libcurl
  *
  */
 
@@ -49,7 +49,7 @@ WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
 	 return realsize;
 }
 
-void initialize()
+void net_initialize()
 {
 	 curl_global_init(CURL_GLOBAL_ALL);
 
@@ -65,17 +65,17 @@ void initialize()
 
 }
 
-static void seturl(char * url)
+static void net_seturl(char * url)
 {
 	
  	 /* specify URL to get */
      	 curl_easy_setopt(curl_handle, CURLOPT_URL, url);
 }
 
-long lookup(char *url, char *output)
+char *net_get(char *url, size_t *size)
 {
-  	  initialize();
-	  seturl(url);
+//  	  initialize();
+	  net_seturl(url);
  
  	  struct MemoryStruct chunk;
 
@@ -108,20 +108,23 @@ long lookup(char *url, char *output)
 		//printf("%lu bytes retrieved\n", (long)chunk.size);
 		//printf("Data: %s\n" , chunk.memory);		 
 	  
-	  	memcpy(output, chunk.memory, chunk.size + 1);
+	  	//memcpy(output, chunk.memory, chunk.size + 1);
+	  	int bsize = chunk.size;
+		char *buff = (char *)malloc(bsize);
+		*size = bsize;  
+		buff = chunk.memory;
+		return buff;
 	  }
 
-	  /* cleanup curl stuff */
-       	  curl_easy_cleanup(curl_handle);
-
-	  free(chunk.memory);
-
-       	  return chunk.size;
+	  
+	  return "EERROR";
 
 }
 
-void cleanup()
+void net_cleanup()
 {
+	/* cleanup curl stuff */
+        curl_easy_cleanup(curl_handle);
 
 	/* we're done with libcurl, so clean it up */
   	curl_global_cleanup();
@@ -132,21 +135,29 @@ void cleanup()
 #include <stdio.h>
 int main(int argc , char **argv)
 {
-	char data[5000]; 
-	long size;
+	
+	
+
+	char *data; 
+	size_t size;
 	char *url;
+	
+	net_initialize();
 
 	if(argc != 2){
-		printf("Usage: ./a.out url\n");
+		printf("Usage: %s  url\n" , argv[0]);
 		exit(1);
 	}
 
 	url = argv[1];		
 
 	
-	size = lookup(url, data);
-	printf("Size: %lu \n" , size );
-	printf("BEGIN DATA: %s\n" , data);	
-	cleanup();	
+	data =  net_get(url, &size);
+	printf("Size: %zu\n" , size );
+	printf("BEGIN DATA: %s\n" , data);
+	
+
+	free(data);	
+	net_cleanup();	
 }
 #endif
