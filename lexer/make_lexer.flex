@@ -16,8 +16,7 @@
 \<\/base\>
 \<head\>
 \<\/head\>
-\<style\>			
-\<\/style\>
+\<style[^>]*\>[^\0]*\<\/style\> 			
 \<title\>
 \<\/title\>
 \<address\>
@@ -152,8 +151,7 @@
 \<\/canvas\>
 \<noscript\>
 \<\/noscript\>
-\<script\>
-\<\/script\>
+\<script[^>]*\>[^\0]*\<\/script\>	
 \<del\>
 \<\/del\>
 \<ins\>
@@ -224,6 +222,7 @@
 \<\/shadow\>
 \<template\>
 \<\/template\>
+\<!doctype\ html\>
 [[:alnum:]\?;\.!@#$%\^&\*\\\=]+	puts("ALPHANUMERIC VAL");		
 \<[^>]*\>		puts("UNRECOGNIZED TAG");		
 %%
