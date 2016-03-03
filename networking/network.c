@@ -2,7 +2,6 @@
 #include <string.h>
 #include "network.h"
 #include <curl/curl.h>
-#define STANDALONE_TEST 1
 
 //TODO Check for memory leaks
 
@@ -142,13 +141,12 @@ int main(int argc , char **argv)
 	size_t size;
 	char *url;
 	
-	net_initialize();
-
 	if(argc != 2){
 		printf("Usage: %s  url\n" , argv[0]);
 		exit(1);
 	}
 
+	net_initialize();
 	url = argv[1];		
 
 	

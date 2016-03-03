@@ -1,6 +1,6 @@
 #ifndef NETWORK_H
 #define NETWORK_H
-
+#include <stdlib.h>
 /*
  *	To use the interface, first call net_initialize();
  *	
