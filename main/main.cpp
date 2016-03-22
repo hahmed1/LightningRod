@@ -1,5 +1,5 @@
 #include <SDL2/SDL.h>
-
+#include "PageView.h"
 // global declaration
 
 #define TRUE  1
@@ -236,11 +236,17 @@ int main( int argc, char **argv )
 {
 	SDL_Window *window;
 	SDL_Renderer *renderer;
-
+	SDL_Texture *texture;
+	PageView *pv;
+	
+	
+	
 	SDL_Init(SDL_INIT_VIDEO);
 
 	SDL_Log( "SDL Initialized\n");
+	
 
+	
 
 	window = SDL_CreateWindow("Key Press Test", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, screen_w, screen_h, SDL_WINDOW_OPENGL );
 
@@ -249,21 +255,36 @@ int main( int argc, char **argv )
 	}
 
 
-	renderer = SDL_CreateRenderer(window, -1, 0);
+	Uint32 render_flags = (SDL_BLENDMODE_BLEND | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC); 
+
+		
+	renderer = SDL_CreateRenderer(window, -1, render_flags);
 	if( renderer == NULL ){
 		SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Failed to create renderer %s\n" , SDL_GetError());
 	}
+	
 
-	SDL_RenderClear( renderer );
-	SDL_SetRenderDrawBlendMode( renderer, SDL_BLENDMODE_ADD );
+
+	//SDL_SetRenderDrawBlendMode(renderer,-1,  render_flags); 
+
+	texture = SDL_CreateTexture(renderer,
+		       	SDL_PIXELFORMAT_RGBA8888,
+		       	SDL_TEXTUREACCESS_TARGET,
+		        screen_w,
+			screen_h	);
+
+	pv = new PageView(texture, screen_w, screen_h);
 
 	running = TRUE;
 	cur_mode = LR_DEFAULT;
 
 	// program main loop
 	while(running){
+	//	SDL_SetRenderTarget(renderer, texture);
+	//	SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
+		SDL_RenderClear(renderer);
 		input_controller();
-	//	render(renderer);
+			
 	}
 
 
