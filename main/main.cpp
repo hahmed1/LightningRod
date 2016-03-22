@@ -2,6 +2,9 @@
 
 // global declaration
 
+#define TRUE  1
+#define FALSE 0
+
 int cur_mode;
 
 enum LR_MODES
@@ -158,7 +161,7 @@ int main( int argc, char **argv )
 {
 	SDL_Window *window;
 	int screen_w, screen_h;
-	bool running;
+	int running;
 
 	SDL_Init(SDL_INIT_VIDEO);
 	
@@ -173,7 +176,7 @@ int main( int argc, char **argv )
 		SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Failed to create window: %s\n" , SDL_GetError());
 	}
 	
-	running = true;
+	running = TRUE;
 
 
 	
@@ -184,7 +187,7 @@ int main( int argc, char **argv )
 		SDL_Event event;
 		while( SDL_PollEvent(&event) ){
 			if( event.type == SDL_QUIT){
-				running = false;
+				running = FALSE;
 				break;
 			}
 			
@@ -222,7 +225,7 @@ int main( int argc, char **argv )
 						update_mode(LR_DEFAULT);
 						break;	
 					case SDLK_ESCAPE:
-						running = false;
+						running = FALSE;
 						break;
 			
 					case SDLK_UP:
