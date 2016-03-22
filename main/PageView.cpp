@@ -1,7 +1,7 @@
 #include "PageView.h"
-PageView::PageView(SDL_Texture *text, int w, int h)
+PageView::PageView(SDL_Renderer *r, int w, int h)
 {
-	texture = text;	
+	renderer = r;	
 
 	screen_w = w;
 	screen_h = h;
@@ -10,19 +10,35 @@ PageView::PageView(SDL_Texture *text, int w, int h)
 	url_bar.x = 0;
 	url_bar.y = 0;
 	url_bar.w = screen_w;
-	url_bar.h = screen_h  / 4;	
+	url_bar.h = screen_h  / 8;	
+
+	url = false;	
 	
-	url_cur_color = blank_color;
 
 	//TODO setup default view range
+
+}
+
+void PageView::loopCall()
+{
+	if(url){
+		//this->showUrlBar();
+		SDL_SetRenderDrawColor(renderer, 0x00, 0x80, 0xFF, 0x80);
+		SDL_RenderFillRect(renderer, &url_bar);
+	}
+	
 }
 
 void PageView::showUrlBar()
 {
-	url_cur_color = url_color;	
+	url = true;
+	SDL_Log("Url Bar set to TRUE");
 }
 
 void PageView::hideUrlBar()
 {
-	url_cur_color = blank_color;	
+	url = false;
+	SDL_Log("Url Bar set to FALSE");
 }
+
+

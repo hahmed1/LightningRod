@@ -35,9 +35,8 @@ enum KEYS
 };
 
 
-void render_links_tab()
+void render_links_tab(PageView *pv)
 {
-
 }
 
 void shift_down()
@@ -62,9 +61,10 @@ void page_up()
 
 }
 
-void show_url_bar()
+void show_url_bar(PageView *pv)
 {
 
+	pv->showUrlBar();	
 
 }
 
@@ -88,10 +88,10 @@ void navigate()
 * By the time this gets called, mode switching already happened.
 *
 */
-void handle_keypress(int key)
+void handle_keypress(int key, PageView *pv)
 {
 	if((key == LR_L) && (cur_mode == LR_LINKS)){
-		render_links_tab();
+		render_links_tab(pv);
 	}
 
 	else if((key == LR_J) && (cur_mode == LR_DEFAULT)){
@@ -111,7 +111,7 @@ void handle_keypress(int key)
 	}
 
 	else if((key == LR_SPACE) && (cur_mode == LR_URL)){
-		show_url_bar();
+		show_url_bar(pv);
 	}
 
 	else if((key == LR_UP) && (cur_mode == LR_LINKS)){
@@ -161,7 +161,7 @@ void update_mode( const int mode )
 	}
 }
 
-void input_controller()
+void input_controller(PageView *pv)
 {
 	SDL_Event event;
 	while( SDL_PollEvent(&event) ){
@@ -176,31 +176,32 @@ void input_controller()
 				case SDLK_l:
 				SDL_Log("L key pressed\n");
 				update_mode(LR_LINKS);
-				handle_keypress(LR_L);
+				handle_keypress(LR_L, pv);
 				break;
 				case SDLK_j:
 				SDL_Log("J key pressed\n");
-				handle_keypress(LR_J);
+				handle_keypress(LR_J, pv);
 				break;
 				case SDLK_k:
 				SDL_Log("K key pressed\n");
-				handle_keypress(LR_K);
+				handle_keypress(LR_K, pv);
 				break;
 				case SDLK_f:
 				SDL_Log("F key pressed\n");
-				handle_keypress(LR_F);
+				handle_keypress(LR_F, pv);
 				break;
 				case SDLK_g:
 				SDL_Log("G key pressed\n");
-				handle_keypress(LR_G);
+				handle_keypress(LR_G, pv);
 				break;
 				case SDLK_SPACE:
 				SDL_Log("Space key pressed");
 				update_mode(LR_URL);
-				handle_keypress(LR_SPACE);
+				handle_keypress(LR_SPACE, pv);
 				break;
 				case SDLK_q:
 				SDL_Log("Q key pressed\n");
+				pv->hideUrlBar();
 				update_mode(LR_DEFAULT);
 				break;
 				case SDLK_ESCAPE:
@@ -209,16 +210,16 @@ void input_controller()
 
 				case SDLK_UP:
 				SDL_Log("Up key pressed\n");
-				handle_keypress(LR_UP);
+				handle_keypress(LR_UP, pv);
 				break;
 				case SDLK_DOWN:
 				SDL_Log("Down key pressed\n");
-				handle_keypress(LR_DOWN);
+				handle_keypress(LR_DOWN, pv);
 				break;
 
 				case SDLK_RETURN:
 				SDL_Log("Return key pressed\n");
-				handle_keypress(LR_RETURN);
+				handle_keypress(LR_RETURN, pv);
 				break;
 			}
 
@@ -273,26 +274,31 @@ int main( int argc, char **argv )
 		        screen_w,
 			screen_h	);
 
-	pv = new PageView(texture, screen_w, screen_h);
+	pv = new PageView(renderer, screen_w, screen_h);
 
 	running = TRUE;
 	cur_mode = LR_DEFAULT;
 
 
 	//temp
+	/*
 	SDL_Rect r;
 	r.x = 0;
 	r.y = 0;
 	r.w = screen_w;
 	r.h = screen_h / 8; 
+	*/
 	// program main loop
 	while(running){
 		SDL_SetRenderTarget(renderer, texture);
 		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
 		SDL_RenderClear(renderer);
-		input_controller();
-		SDL_SetRenderDrawColor(renderer, 0x00, 0x80, 0xFF, 0x80);
-		SDL_RenderFillRect(renderer , &r);
+		input_controller(pv);
+		pv->loopCall();
+	
+	//	SDL_SetRenderDrawColor(renderer, 0x00, 0x80, 0xFF, 0x80);
+	//	SDL_RenderFillRect(renderer , &r);
+		
 		SDL_SetRenderTarget(renderer, NULL);
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
 		SDL_RenderPresent(renderer);				
