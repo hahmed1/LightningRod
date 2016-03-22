@@ -12,8 +12,20 @@ PageView::PageView(SDL_Renderer *r, int w, int h)
 	url_bar.w = screen_w;
 	url_bar.h = screen_h  / 8;	
 
-	url = false;	
+
+	//SET links bar params
 	
+	int box_length = 200;
+
+	links_bar.x = screen_w - box_length ;
+	links_bar.y = screen_h - box_length ;
+	links_bar.w = box_length;
+	links_bar.h = box_length;
+
+	
+
+	url = false;	
+	links = false;	
 
 	//TODO setup default view range
 
@@ -26,9 +38,16 @@ void PageView::loopCall()
 		SDL_SetRenderDrawColor(renderer, 0x00, 0x80, 0xFF, 0x80);
 		SDL_RenderFillRect(renderer, &url_bar);
 	}
+
+	if(links){
+		SDL_SetRenderDrawColor(renderer, 0x00, 0x80, 0xFF, 0x80);
+		SDL_RenderFillRect(renderer, &links_bar);
+	
+	}
 	
 }
 
+//TODO add text input
 void PageView::showUrlBar()
 {
 	url = true;
@@ -40,5 +59,35 @@ void PageView::hideUrlBar()
 	url = false;
 	SDL_Log("Url Bar set to FALSE");
 }
+
+
+void PageView::showLinksBar()
+{
+	links = true;
+	SDL_Log("Links Bar set to TRUE");
+}
+
+
+void PageView::hideLinksBar()
+{
+	links = false;
+	SDL_Log("Links Bar set to FALSE");
+
+
+}
+
+void PageView::hideAll()
+{
+	this->hideUrlBar();
+	this->hideLinksBar();
+}
+
+
+
+
+
+
+
+
 
 

@@ -10,7 +10,9 @@ class PageView
 	int screen_w , screen_h;
 
 	SDL_Rect url_bar;
-	
+	SDL_Rect links_bar;
+
+	bool links;	
 	bool url;
 
 	public:
@@ -22,7 +24,10 @@ class PageView
 		void showUrlBar();
 		void hideUrlBar();
 		void showLinksBar();
+		void hideLinksBar();
 		void loopCall(); 
+		void hideAll();
+		
 };
 #endif
 

@@ -8,8 +8,8 @@
 int cur_mode;
 int running;
 
-static const int screen_w = 1024;
-static const int screen_h = 1024;
+static const int screen_w = 640;
+static const int screen_h = 640;
 
 enum LR_MODES
 {
@@ -37,6 +37,7 @@ enum KEYS
 
 void render_links_tab(PageView *pv)
 {
+	pv->showLinksBar();
 }
 
 void shift_down()
@@ -201,7 +202,7 @@ void input_controller(PageView *pv)
 				break;
 				case SDLK_q:
 				SDL_Log("Q key pressed\n");
-				pv->hideUrlBar();
+				pv->hideAll();
 				update_mode(LR_DEFAULT);
 				break;
 				case SDLK_ESCAPE:
@@ -278,27 +279,23 @@ int main( int argc, char **argv )
 
 	running = TRUE;
 	cur_mode = LR_DEFAULT;
+	
+	//TEMP
+	SDL_Rect rl;
+	rl.x = screen_w - 200;
+	rl.y = screen_h - 200;
+	rl.w = 200;
+	rl.h = 200;
 
 
-	//temp
-	/*
-	SDL_Rect r;
-	r.x = 0;
-	r.y = 0;
-	r.w = screen_w;
-	r.h = screen_h / 8; 
-	*/
-	// program main loop
 	while(running){
 		SDL_SetRenderTarget(renderer, texture);
 		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
 		SDL_RenderClear(renderer);
 		input_controller(pv);
 		pv->loopCall();
-	
-	//	SDL_SetRenderDrawColor(renderer, 0x00, 0x80, 0xFF, 0x80);
-	//	SDL_RenderFillRect(renderer , &r);
-		
+		//SDL_SetRenderDrawColor(renderer, 0x00, 0x80, 0x00, 0x80);
+		//SDL_RenderFillRect(renderer, &rl);	
 		SDL_SetRenderTarget(renderer, NULL);
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
 		SDL_RenderPresent(renderer);				
