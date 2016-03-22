@@ -229,7 +229,7 @@ void input_controller()
 //TODO
 void render(SDL_Renderer *renderer)
 {
-			
+	SDL_RenderClear(renderer);			
 
 }
 int main( int argc, char **argv )
@@ -254,6 +254,8 @@ int main( int argc, char **argv )
 		SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Failed to create renderer %s\n" , SDL_GetError());
 	}
 
+	SDL_RenderClear( renderer );
+	SDL_SetRenderDrawBlendMode( renderer, SDL_BLENDMODE_ADD );
 
 	running = TRUE;
 	cur_mode = LR_DEFAULT;
@@ -261,7 +263,7 @@ int main( int argc, char **argv )
 	// program main loop
 	while(running){
 		input_controller();
-		render(renderer);
+	//	render(renderer);
 	}
 
 
