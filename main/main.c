@@ -7,6 +7,10 @@
 
 int cur_mode;
 int running;
+
+static const int screen_w = 1024;
+static const int screen_h = 1024;
+
 enum LR_MODES
 {
 	LR_DEFAULT,
@@ -221,18 +225,22 @@ void input_controller()
 		}
 	}
 }
+
+//TODO
+void render(SDL_Renderer *renderer)
+{
+			
+
+}
 int main( int argc, char **argv )
 {
 	SDL_Window *window;
 	SDL_Renderer *renderer;
-	int screen_w, screen_h;
 
 	SDL_Init(SDL_INIT_VIDEO);
 
 	SDL_Log( "SDL Initialized\n");
 
-	screen_w = 1024;
-	screen_h = 1024;
 
 	window = SDL_CreateWindow("Key Press Test", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, screen_w, screen_h, SDL_WINDOW_OPENGL );
 
@@ -253,6 +261,7 @@ int main( int argc, char **argv )
 	// program main loop
 	while(running){
 		input_controller();
+		render(renderer);
 	}
 
 
