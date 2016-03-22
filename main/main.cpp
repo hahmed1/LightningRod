@@ -2,6 +2,7 @@
 #include <SDL2_ttf/SDL_ttf.h>
 #include <SDL2_image/SDL_image.h>
 #include "PageView.h"
+#include "font.h"
 // global declaration
 
 #define TRUE  1
@@ -299,14 +300,6 @@ int main( int argc, char **argv )
 	running = TRUE;
 	cur_mode = LR_DEFAULT;
 	
-	//TEMP
-	/*
-	SDL_Rect rl;
-	rl.x = screen_w - 200;
-	rl.y = screen_h - 200;
-	rl.w = 200;
-	rl.h = 200;
-	*/
 
 	while(running){
 		SDL_SetRenderTarget(renderer, texture);
@@ -323,6 +316,8 @@ int main( int argc, char **argv )
 
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
+	TTF_Quit();
+	IMG_Quit();
 	SDL_Quit();
 	printf("Process Complete, exiting \n");
 	return 0;
