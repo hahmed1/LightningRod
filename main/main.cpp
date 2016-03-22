@@ -1,16 +1,129 @@
-#include <iostream>
 #include <SDL2/SDL.h>
 
 // global declaration
 
 int cur_mode;
+
 enum LR_MODES
 {
-		LR_DEFAULT,
-		LR_LINKS,
-		LR_URL
+	LR_DEFAULT,
+	LR_LINKS,
+	LR_URL
 
 };
+
+enum KEYS
+{
+	LR_L,
+	LR_J,
+	LR_K,
+	LR_F,
+	LR_G,
+	LR_Q,
+	LR_ESC,
+	LR_SPACE,
+	LR_RETURN,
+	LR_UP,
+	LR_DOWN
+};
+
+
+void render_links_tab()
+{
+
+}
+
+void shift_down()
+{
+
+}
+
+void shift_up()
+{
+
+
+}
+
+void page_down()
+{
+
+}
+
+void page_up()
+{
+
+
+}
+
+void show_url_bar()
+{
+
+
+}
+
+void links_up()
+{
+
+}
+
+void links_down()
+{
+
+}
+void navigate()
+{
+
+}
+
+
+/*
+ *
+ * By the time this gets called, mode switching already happened.
+ *
+ */
+void handle_keypress(int key)
+{
+	if((key == LR_L) && (cur_mode == LR_LINKS)){
+		render_links_tab();	
+	}
+
+	else if((key == LR_J) && (cur_mode == LR_DEFAULT)){
+		shift_down();	
+	}
+
+	else if((key == LR_K) && (cur_mode == LR_DEFAULT)){
+		shift_up();
+	}
+
+	else if((key == LR_F) && (cur_mode == LR_DEFAULT)){
+		page_down();
+	}
+
+	else if((key == LR_G) && (cur_mode == LR_DEFAULT)){
+		page_up();
+	}
+
+	else if((key == LR_SPACE) && (cur_mode == LR_URL)){
+		show_url_bar();
+	}
+
+	else if((key == LR_UP) && (cur_mode == LR_LINKS)){
+		links_up();
+	}
+
+	else if((key == LR_DOWN) && (cur_mode == LR_LINKS)){
+		links_down();
+	}
+
+	else if((key == LR_RETURN && (cur_mode == LR_LINKS))){
+		navigate();
+	}
+
+	else{
+		SDL_Log("Invalid key combination: %d\n" , key);
+	}		
+}	
+
 
 // updates the mode from cur_mode to mode or throws an error if the request is invalid
 void update_mode( const int mode )
@@ -81,22 +194,28 @@ int main( int argc, char **argv )
 					case SDLK_l:
 						SDL_Log("L key pressed\n");
 						update_mode(LR_LINKS);
+						handle_keypress(LR_L);
 						break;
 					case SDLK_j:
 						SDL_Log("J key pressed\n");					
+						handle_keypress(LR_J);
 						break;
 					case SDLK_k:
 						SDL_Log("K key pressed\n");	
+						handle_keypress(LR_K);
 						break;
 					case SDLK_f:
 						SDL_Log("F key pressed\n");	
+						handle_keypress(LR_F);
 						break;
 					case SDLK_g:
 						SDL_Log("G key pressed\n");
+						handle_keypress(LR_G);
 						break;
 					case SDLK_SPACE:
 						SDL_Log("Space key pressed");	
 						update_mode(LR_URL);
+						handle_keypress(LR_SPACE);
 						break;
 					case SDLK_q:
 						SDL_Log("Q key pressed\n");
@@ -105,6 +224,20 @@ int main( int argc, char **argv )
 					case SDLK_ESCAPE:
 						running = false;
 						break;
+			
+					case SDLK_UP:
+						SDL_Log("Up key pressed\n");
+						handle_keypress(LR_UP);
+						break;
+					case SDLK_DOWN:
+						SDL_Log("Down key pressed\n");
+						handle_keypress(LR_DOWN);
+						break;
+
+					case SDLK_RETURN:
+						SDL_Log("Return key pressed\n");
+						handle_keypress(LR_RETURN);
+						break;	
 				}	
 			
 			}	
