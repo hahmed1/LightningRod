@@ -1,6 +1,7 @@
 #ifndef PAGEVIEW
 #define PAGEVIEW
 #include <SDL2/SDL.h>
+#include "font.h"
 class PageView
 {
 	//TODO add PageViewModel
@@ -14,6 +15,8 @@ class PageView
 
 	bool links;	
 	bool url;
+
+	Font *default_font;
 
 	public:
 		PageView(SDL_Renderer *r, int w, int h);	

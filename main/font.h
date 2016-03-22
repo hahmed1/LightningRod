@@ -15,15 +15,23 @@ class Font{
 
 	void free();
 	public:
-		Font(SDL_Texture*, SDL_Renderer*, TTF_Font*, int );
+		Font( SDL_Renderer*, TTF_Font*, int );
 		~Font();
 		
 		void setColor( Uint8 red, Uint8 green, Uint8 blue );
 		void setBlendMode(SDL_BlendMode blendMode);
 		void setAlpha(Uint8 alpha);
 
-		//IMP need to call this before render()
+
+		/*IMP need to call this before render()
+		 *
+		 * responsible for setting:
+		 * 	texture, 
+		 * 	iWidth/Height
+		 *
+		 */
 		bool loadFromRenderedText( std::string , SDL_Color );
+
 		void render( int x, int y );
 		int getWidth();
 		int getHeight();

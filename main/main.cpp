@@ -239,19 +239,20 @@ void render(SDL_Renderer *renderer)
 }
 int main( int argc, char **argv )
 {
+
+	//DECLARATIONS
 	SDL_Window *window;
 	SDL_Renderer *renderer;
 	SDL_Texture *texture;
 	PageView *pv;
-	
-	
-	
+	Font *font;	
+	TTF_Font *font1;	
+	//SETUP	
 	SDL_Init(SDL_INIT_VIDEO);
 
 	SDL_Log( "SDL Initialized\n");
 	
 
-	
 
 	window = SDL_CreateWindow("Key Press Test", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, screen_w, screen_h, SDL_WINDOW_OPENGL );
 
@@ -272,16 +273,6 @@ int main( int argc, char **argv )
 
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND); 
 
-	texture = SDL_CreateTexture(renderer,
-		       	SDL_PIXELFORMAT_RGBA8888,
-		       	SDL_TEXTUREACCESS_TARGET,
-		        screen_w,
-			screen_h	);
-
-	pv = new PageView(renderer, screen_w, screen_h);
-
-
-
 	int img_flags = IMG_INIT_PNG;
 	if( !(IMG_Init(img_flags) & img_flags)){
 		SDL_LogCritical(SDL_LOG_CATEGORY_ERROR , "Failed to initialize SDL Image: %s\n", SDL_GetError());
@@ -297,16 +288,35 @@ int main( int argc, char **argv )
 		SDL_Log("Initialized SDL_TTF");
 	}
 
-	running = TRUE;
+
+
+	//ASSIGNMENTS
+	texture = SDL_CreateTexture(renderer,
+		       	SDL_PIXELFORMAT_RGBA8888,
+		       	SDL_TEXTUREACCESS_TARGET,
+		        screen_w,
+			screen_h	);
+
+	
+	pv = new PageView(renderer, screen_w, screen_h);
+	font1 = TTF_OpenFont("OpenSans-Bold.ttf", 10);	
+	font = new Font(renderer,font1,  10);	
+	SDL_Color green = { 0x00, 0xFF, 0x00 };
+
+
+	font->loadFromRenderedText("LightningRod WebBrowser", green);
+
+		running = TRUE;
 	cur_mode = LR_DEFAULT;
 	
-
+	//MAINLOOP
 	while(running){
 		SDL_SetRenderTarget(renderer, texture);
 		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
 		SDL_RenderClear(renderer);
 		input_controller(pv);
 		pv->loopCall();
+		font->render(0,0);
 		SDL_SetRenderTarget(renderer, NULL);
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
 		SDL_RenderPresent(renderer);				

@@ -1,12 +1,18 @@
 #include "font.h"
 
-Font::Font(SDL_Texture *tex, SDL_Renderer *ren, TTF_Font *f, int sz )
+Font::Font( SDL_Renderer *ren, TTF_Font *f, int sz )
 {
-	texture = tex;
 	renderer = ren;
-	font = f;
 	size = sz;
-
+	//font = TTF_OpenFont(fpath.c_str(), size);
+	font = f;	
+	/*
+	if(font == NULL){
+		SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "FONT NULL\n");
+		SDL_Log("Path: %s\n" , fpath.c_str());
+		exit(-1);
+	}
+	*/	
 	//set defaults
 	rc = 0x00;
 	gc = 0xFF;
@@ -19,7 +25,7 @@ Font::Font(SDL_Texture *tex, SDL_Renderer *ren, TTF_Font *f, int sz )
 }
 bool Font::loadFromRenderedText(std::string text, SDL_Color c)
 {
-	free();
+	//free();
 
 	SDL_Surface* textSurface = TTF_RenderText_Solid( font, text.c_str(), c );
 	if( textSurface == NULL )
@@ -50,6 +56,10 @@ bool Font::loadFromRenderedText(std::string text, SDL_Color c)
 	return texture != NULL;
 
 }
+
+
+
+
 void Font::render(int x, int y)
 {
 	SDL_Rect renderQuad = { x, y, iWidth, iHeight };

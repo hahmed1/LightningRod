@@ -27,6 +27,8 @@ PageView::PageView(SDL_Renderer *r, int w, int h)
 	url = false;	
 	links = false;	
 
+//	default_font = new Font(renderer, ,10);
+
 	//TODO setup default view range
 
 }
