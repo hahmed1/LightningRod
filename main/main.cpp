@@ -280,13 +280,14 @@ int main( int argc, char **argv )
 
 	// program main loop
 	while(running){
-	//	SDL_SetRenderTarget(renderer, texture);
-	//	SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
+		SDL_SetRenderTarget(renderer, texture);
+		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
 		SDL_RenderClear(renderer);
 		input_controller();
-			
+		SDL_SetRenderTarget(renderer, NULL);
+		SDL_RenderCopy(renderer, texture, NULL, NULL);
+				
 	}
-
 
 
 
