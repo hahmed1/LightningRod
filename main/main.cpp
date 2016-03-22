@@ -32,10 +32,30 @@ int main(int argc, char **argv)
 			else if( event.type == SDL_KEYDOWN ){
 				switch( event.key.keysym.sym ){
 					
+					case SDLK_l:
+						SDL_Log("L key pressed\n");
+						break;
 					case SDLK_j:
 						SDL_Log("J key pressed\n");					
-			
-			
+						break;
+					case SDLK_k:
+						SDL_Log("K key pressed\n");	
+						break;
+					case SDLK_f:
+						SDL_Log("F key pressed\n");	
+						break;
+					case SDLK_g:
+						SDL_Log("G key pressed\n");
+						break;
+					case SDLK_SPACE:
+						SDL_Log("Space key pressed");	
+						break;
+					case SDLK_q:
+						SDL_Log("Q key pressed\n");
+						break;	
+					case SDLK_ESCAPE:
+						running = false;
+						break;
 				}	
 			
 			}	
