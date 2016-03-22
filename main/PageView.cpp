@@ -60,7 +60,7 @@ void PageView::hideUrlBar()
 	SDL_Log("Url Bar set to FALSE");
 }
 
-
+//TODO add links to Links bar
 void PageView::showLinksBar()
 {
 	links = true;

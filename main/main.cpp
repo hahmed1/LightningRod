@@ -1,4 +1,6 @@
 #include <SDL2/SDL.h>
+#include <SDL2_ttf/SDL_ttf.h>
+#include <SDL2_image/SDL_image.h>
 #include "PageView.h"
 // global declaration
 
@@ -277,16 +279,34 @@ int main( int argc, char **argv )
 
 	pv = new PageView(renderer, screen_w, screen_h);
 
+
+
+	int img_flags = IMG_INIT_PNG;
+	if( !(IMG_Init(img_flags) & img_flags)){
+		SDL_LogCritical(SDL_LOG_CATEGORY_ERROR , "Failed to initialize SDL Image: %s\n", SDL_GetError());
+	} else{
+	
+		SDL_Log("Initialized SDL_Image\n");
+	}
+
+
+	if( TTF_Init() == -1){
+		SDL_LogCritical( SDL_LOG_CATEGORY_ERROR , "Failed to initialize SDL TTF %s\n", SDL_GetError());
+	} else{
+		SDL_Log("Initialized SDL_TTF");
+	}
+
 	running = TRUE;
 	cur_mode = LR_DEFAULT;
 	
 	//TEMP
+	/*
 	SDL_Rect rl;
 	rl.x = screen_w - 200;
 	rl.y = screen_h - 200;
 	rl.w = 200;
 	rl.h = 200;
-
+	*/
 
 	while(running){
 		SDL_SetRenderTarget(renderer, texture);
@@ -294,8 +314,6 @@ int main( int argc, char **argv )
 		SDL_RenderClear(renderer);
 		input_controller(pv);
 		pv->loopCall();
-		//SDL_SetRenderDrawColor(renderer, 0x00, 0x80, 0x00, 0x80);
-		//SDL_RenderFillRect(renderer, &rl);	
 		SDL_SetRenderTarget(renderer, NULL);
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
 		SDL_RenderPresent(renderer);				
