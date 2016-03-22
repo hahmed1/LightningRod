@@ -255,7 +255,7 @@ int main( int argc, char **argv )
 	}
 
 
-	Uint32 render_flags = (SDL_BLENDMODE_BLEND | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC); 
+	Uint32 render_flags = ( SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC); 
 
 		
 	renderer = SDL_CreateRenderer(window, -1, render_flags);
@@ -265,7 +265,7 @@ int main( int argc, char **argv )
 	
 
 
-	//SDL_SetRenderDrawBlendMode(renderer,-1,  render_flags); 
+	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND); 
 
 	texture = SDL_CreateTexture(renderer,
 		       	SDL_PIXELFORMAT_RGBA8888,
@@ -278,15 +278,24 @@ int main( int argc, char **argv )
 	running = TRUE;
 	cur_mode = LR_DEFAULT;
 
+
+	//temp
+	SDL_Rect r;
+	r.x = 0;
+	r.y = 0;
+	r.w = screen_w;
+	r.h = screen_h / 8; 
 	// program main loop
 	while(running){
 		SDL_SetRenderTarget(renderer, texture);
 		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
 		SDL_RenderClear(renderer);
 		input_controller();
+		SDL_SetRenderDrawColor(renderer, 0x00, 0x80, 0xFF, 0x80);
+		SDL_RenderFillRect(renderer , &r);
 		SDL_SetRenderTarget(renderer, NULL);
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
-				
+		SDL_RenderPresent(renderer);				
 	}
 
 
