@@ -1,7 +1,47 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 
-int main(int argc, char **argv)
+// global declaration
+
+int cur_mode;
+enum LR_MODES
+{
+		LR_DEFAULT,
+		LR_LINKS,
+		LR_URL
+
+};
+
+// updates the mode from cur_mode to mode or throws an error if the request is invalid
+void update_mode( const int mode )
+{
+	if((cur_mode == LR_DEFAULT) && (mode == LR_LINKS)){
+		cur_mode = LR_LINKS;
+		SDL_Log("Mode Switch from DEFAULT to LINKS\n");		
+	}
+
+	else if((cur_mode == LR_DEFAULT) && (mode == LR_URL)){
+		cur_mode = LR_URL;
+		SDL_Log("Mode Switch from DEFAULT to URL\n");
+	}
+
+
+	else if((cur_mode == LR_LINKS) && (mode == LR_DEFAULT)){
+		cur_mode = LR_DEFAULT;
+		SDL_Log("Mode Switch from LINKS to DEFAULT\n");
+	}
+
+	else if((cur_mode == LR_URL) && (mode == LR_DEFAULT)){
+		cur_mode = LR_DEFAULT;
+		SDL_Log("Mode Switch from URL to DEFAULT\n");
+	}
+
+	else{
+		SDL_Log("Invalid Mode Switch Attempt, cur mode: %d\n" , cur_mode);
+	}
+}
+
+int main( int argc, char **argv )
 {
 	SDL_Window *window;
 	int screen_w, screen_h;
@@ -21,6 +61,12 @@ int main(int argc, char **argv)
 	}
 	
 	running = true;
+
+
+	
+	cur_mode = LR_DEFAULT;
+
+	// program main loop
 	while(running){
 		SDL_Event event;
 		while( SDL_PollEvent(&event) ){
@@ -34,6 +80,7 @@ int main(int argc, char **argv)
 					
 					case SDLK_l:
 						SDL_Log("L key pressed\n");
+						update_mode(LR_LINKS);
 						break;
 					case SDLK_j:
 						SDL_Log("J key pressed\n");					
@@ -49,9 +96,11 @@ int main(int argc, char **argv)
 						break;
 					case SDLK_SPACE:
 						SDL_Log("Space key pressed");	
+						update_mode(LR_URL);
 						break;
 					case SDLK_q:
 						SDL_Log("Q key pressed\n");
+						update_mode(LR_DEFAULT);
 						break;	
 					case SDLK_ESCAPE:
 						running = false;
