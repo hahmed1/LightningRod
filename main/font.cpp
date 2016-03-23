@@ -3,6 +3,7 @@
 Font::Font( SDL_Renderer *ren, TTF_Font *f, int sz )
 {
 	renderer = ren;
+	texture = NULL;
 	size = sz;
 	//font = TTF_OpenFont(fpath.c_str(), size);
 	font = f;	
@@ -21,11 +22,13 @@ Font::Font( SDL_Renderer *ren, TTF_Font *f, int sz )
 
 	bm = SDL_BLENDMODE_NONE;
 
+	iWidth = 0;
+	iHeight = 0;
 
 }
 bool Font::loadFromRenderedText(std::string text, SDL_Color c)
 {
-	//free();
+	free();
 
 	SDL_Surface* textSurface = TTF_RenderText_Solid( font, text.c_str(), c );
 	if( textSurface == NULL )
@@ -43,6 +46,7 @@ bool Font::loadFromRenderedText(std::string text, SDL_Color c)
 		else
 		{
 			//Get image dimensions
+			SDL_Log("Width and height set\n");
 			iWidth = textSurface->w;
 			iHeight = textSurface->h;
 		}
@@ -63,7 +67,7 @@ bool Font::loadFromRenderedText(std::string text, SDL_Color c)
 void Font::render(int x, int y)
 {
 	SDL_Rect renderQuad = { x, y, iWidth, iHeight };
-	SDL_RenderCopyEx( renderer, texture, NULL, &renderQuad, 0.0, NULL, SDL_FLIP_NONE);
+	int val = SDL_RenderCopyEx( renderer, texture, NULL, &renderQuad, 0.0, NULL, SDL_FLIP_NONE);
 }
 
 void Font::free()

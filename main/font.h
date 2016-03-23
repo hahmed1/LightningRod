@@ -7,7 +7,7 @@ class Font{
 
 	int size;
 	TTF_Font *font;
-	SDL_Texture* texture;
+	SDL_Texture* texture ;
 	SDL_Renderer* renderer;
 	Uint8 rc,gc,bc,ac;
 	SDL_BlendMode bm;
