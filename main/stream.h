@@ -15,5 +15,5 @@ void add(std::string tag, std::string value);
 void print();
 void clear();
 void clean_up();
-
+std::vector<token>* get_stream();
 #endif

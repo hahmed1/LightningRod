@@ -44,3 +44,10 @@ void print()
 		std::cout << it->second << std::endl;
 	}
 }
+
+std::vector<token>* get_stream()
+{
+	return html_stream;
+}
+
+
