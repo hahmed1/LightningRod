@@ -2,14 +2,15 @@
 #define TOKENNODE
 #include <string>
 #include <vector>
+#include "stream.h"
 class TokenNode{
 	std::string type;
 	std::string value;
-	
+	int id;	
 	std::vector<TokenNode*> children;
 
 	public:
-		TokenNode(std::string , std::string);
+		TokenNode(std::string , std::string, int i);
 		~TokenNode();
 		void addChild(TokenNode* child);
 		

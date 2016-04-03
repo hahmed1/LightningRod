@@ -1,10 +1,10 @@
 #include "TokenNode.h"
 
-TokenNode::TokenNode(std::string t, std::string v)
+TokenNode::TokenNode(std::string t, std::string v, int i)
 {
 	type = t;
 	value = v;
-
+	id = i;
 }
 
 TokenNode::~TokenNode()
@@ -24,22 +24,16 @@ void TokenNode::addChild(TokenNode* child)
 
 
 /*
- * Here we introduce a strict dependency between the lexer module 
- * (i.e. the functions called by the FLEX lexer) and this file.  This
- * is fine so long as this dependency is localized between just these
- * two files.   
- *
- * The dependency is the naming convention used to identify tags. 
- *
- * We have opted to use string comparison to test whether a given token
- * is a leaf or is a closing tag.  
- * Here is the namng convention: 
- *
- * 
+ * Values dependent upon stream.h enum
  *
  */
 bool isLeaf()
 {
+	return id == 2;	
 
+}
 
+bool isClose()
+{
+	return id == 1;	
 }
