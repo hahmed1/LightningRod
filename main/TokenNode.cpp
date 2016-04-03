@@ -17,6 +17,12 @@ TokenNode::~TokenNode()
 
 }
 
+std::string getType()
+{
+	return type;
+}
+
+
 void TokenNode::addChild(TokenNode* child)
 {
 	children.push_back(child);

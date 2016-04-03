@@ -27,12 +27,7 @@ TokenNode* TreeBuilder::construct(std::vector<smart_token> tokens)
 		tokenStream->push_back(cur);	
 	}
 
-	// Now that we are dealing with TokenNode objects 
-	// rather than naked vectors, we create a stack 
-	// for our parsing algorithm. 
-	std::stack<TokenNode*> tmp;
-
-
+	
 
 	/*
 	 * Parsing algorithm illustration: 
@@ -74,14 +69,16 @@ TokenNode* TreeBuilder::construct(std::vector<smart_token> tokens)
 	 *    		HTML (OPEN)
 	 *    
 	 *   We've hit the first close tag, so now we pop the stack and
-	 *   add the elements onto a queue  like so:
+	 *   add the elements onto another stack (so that text ordering is
+	 *   preserved) like so:
+	 
+	 *   tmp__stack: 
 	 *
-	 *   queue: 
-	 *   		Text
 	 *   		P (OPEN) 
+	 * 		Text
 	 *   
 	 *   At this point we've matched the close tag, so we make 
-	 *   everything on the queue a child of the P element, and then
+	 *   everything on the tmp_stack a child of the P element, and then
 	 *   push the P back onto the original stack (with the newly 
 	 *   added children):
 	 *
@@ -93,15 +90,73 @@ TokenNode* TreeBuilder::construct(std::vector<smart_token> tokens)
 	 *  internal means that it's an internal node.  Have to make
 	 *  sure that isLeaf and isClose return true on this new P token.   
 	 */
+	
+	// Now that we are dealing with TokenNode objects 
+	// rather than naked vectors, we create a stack 
+	// for our parsing algorithm. 
+	std::stack<TokenNode*> parse_stack;
+
 
 	for(std::vector<TokenNode*>::iterator it = tokenStream->begin(); it != tokenStream->end(); ++it){
-		if(it->isClose()){
-			std::string type = it->getType();	
-			TokenNode* tmp;
-			do{
-				//TODO figure out
-				tmp = 	
-			} while (tmp->getType != type)
+
+		//if the cur element is a close tag...	
+		if((*it)->isClose()){
+		
+			//html tag type string	
+			std::string type = (*it)->getType();
+			
+			// our temporary stack (see above)
+			std::stack<TokenNode*> tmp_stack;
+
+		
+			// the element at the top of the stack 
+			// note: the close tag never got added
+			// to the stack, so DO NOT pop here	
+			TokenNode *next_ele = parse_stack.top();
+			
+			// assumption: open and close tags of the same 
+			// html-tag-type have the same "type" string 
+			//
+			// string comparison
+		        while(next_ele->getType().compare(type) != 0){
+				tmp_stack.push(next_ele);
+			
+				// now that we've added the top of the 
+				// parse stack to our tmp stack, 
+				// remove the top of the parse stack
+				// and point next_ele to the next element	
+				parse_stack.pop();	
+				next_ele = parse_stack.top();	
+			}
+
+			// by this point, tmp_stack contains all the 
+			// children of the element
+
+			TokenNode *ele_ptr = tmp_stack.top();
+			while(!tmp_stack.empty()){
+				(*it)->addChild(ele_ptr);
+
+				tmp_stack.pop();
+				ele_ptr = tmp_stack.top();
+
+			}	
+		
+		}
+
+		else{
+			parse_stack.push(*it);			
 		}	
 	}	
+
 }
+
+
+
+
+
+
+
+
+
+
+
