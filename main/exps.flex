@@ -210,15 +210,15 @@
 \<\/template\>
 \<!doctype\ html\>
 
-\<html\>			  add("HTMLOPEN" , yytext);
-\<\/html\>			  add("HTMLCLOSE" , yytext);	
-\<h1\>				  add("H1OPEN" , yytext);
-\<\/h1\>		          add("H1CLOSE" , yytext);
-\<p\> 				  add("POPEN" , yytext);
-\<\/p\> 			  add("PCLOSE", yytext);
-\<body\>			  add("BODYOPEN", yytext);
-\<\/body\> 			  add("BODYCLOSE", yytext);
-[[:alnum:]\?;\.!@#$%\^&\*\\\=]+   add("TEXT" , yytext);
+\<html\>			  add("HTML" , yytext, 0);
+\<\/html\>			  add("HTML" , yytext, 1);	
+\<h1\>				  add("H1" , yytext, 0);
+\<\/h1\>		          add("H1" , yytext, 1);
+\<p\> 				  add("P" , yytext, 0);
+\<\/p\> 			  add("P", yytext, 1);
+\<body\>			  add("BODY", yytext, 0);
+\<\/body\> 			  add("BODY", yytext, 1);
+[[:alnum:]\?;\.!@#$%\^&\*\\\=]+   add("TEXT" , yytext, 2);
 %%
 
 
