@@ -4,7 +4,6 @@
 #include "TextToken.h"
 #include "TokenNode.h" 
 #include <fstream>
-
 /*
  * The purpose of this class is essentially just to encapsulate the 
  * algorithm that takes a TokenNode pointer (which reprsents the HTML
