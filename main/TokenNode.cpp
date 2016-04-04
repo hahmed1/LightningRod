@@ -33,10 +33,18 @@ std::vector<TokenNode*> TokenNode::getChildren()
 	return children;
 }	
 
+
+
+bool TokenNode::isText(){
+	return isLeaf() && (type == "TEXT");
+}
+
 /*
  * Values dependent upon stream.h enum
  *
  */
+
+
 bool TokenNode::isLeaf()
 {
 	return id == 2;	

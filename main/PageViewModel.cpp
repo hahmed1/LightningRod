@@ -25,15 +25,15 @@ void PageViewModel::traverse_tree(TokenNode *node, unsigned int flags)
 		// TODO: add whatever other flags we need
 		std::string cur_type = node->getType();
 
-		if(cur_type == "paragraph"){
+		if(cur_type == "P"){
 			flags = flags | para; 	
 		}		
 
-		else if (cur_type == "link"){
+		else if (cur_type == "LINK"){
 			flags = flags | link;
 		}
 
-		else if (cur_type == "heading"){
+		else if (cur_type == "H1"){
 			flags = flags | head;
 		}
 		
