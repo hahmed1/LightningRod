@@ -17,6 +17,9 @@ class TokenNode{
 		bool isLeaf();
 		bool isClose();	
 		std::string getType();
+		std::string getValue();
+		std::vector<TokenNode*> getChildren();
+		std::string* toString();
 };
 
 

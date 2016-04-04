@@ -1,5 +1,5 @@
 #include "TreeBuilder.h"
-
+#include <iostream>
 TreeBuilder::TreeBuilder()
 {
 	tokenStream = new std::vector<TokenNode*>();	
@@ -13,15 +13,18 @@ TreeBuilder::TreeBuilder()
 
 //returns the root node of the tree
 
-TokenNode* TreeBuilder::construct(std::vector<smart_token> tokens)
+TokenNode* TreeBuilder::construct(std::vector<smart_token> *tok)
 {
 	//clear out the existing stream.
 	tokenStream->clear();	
 
+	std::vector<smart_token> tokens = *tok;
+	
 
 	// loop through the vector of smart tokens to create 
 	// the TokenNode objects.  Add these objects to a new 
-	// vector in 'queue' order.	
+	// vector in 'queue' order.
+	//
 	for(std::vector<smart_token>::iterator it = tokens.begin(); it != tokens.end(); ++it){
 		TokenNode *cur = new TokenNode(it->first.first, it->first.second, it->second);	
 		tokenStream->push_back(cur);	
@@ -96,15 +99,26 @@ TokenNode* TreeBuilder::construct(std::vector<smart_token> tokens)
 	// for our parsing algorithm. 
 	std::stack<TokenNode*> parse_stack;
 
-
 	for(std::vector<TokenNode*>::iterator it = tokenStream->begin(); it != tokenStream->end(); ++it){
 
 		//if the cur element is a close tag...	
+				
+		// note: 'it' ptr should remain constant for this
+		// branch of code (per iteration).
 		if((*it)->isClose()){
 		
 			//html tag type string	
 			std::string type = (*it)->getType();
 			
+		
+			// if we've reached the HTML close tag, 
+			// we are done... no need to go any further.
+			/*
+			if(type == "HTML"){
+				return (*it);
+			} */
+		
+		
 			// our temporary stack (see above)
 			std::stack<TokenNode*> tmp_stack;
 
@@ -112,41 +126,65 @@ TokenNode* TreeBuilder::construct(std::vector<smart_token> tokens)
 			// the element at the top of the stack 
 			// note: the close tag never got added
 			// to the stack, so DO NOT pop here	
-			TokenNode *next_ele = parse_stack.top();
+			TokenNode *next_ele;// = parse_stack.top();
 			
 			// assumption: open and close tags of the same 
 			// html-tag-type have the same "type" string 
 			//
+			// After this loop, next_ele should point to
+			// the matching open tag of the '*it' close tag.
+			//
 			// string comparison
 		        while(next_ele->getType().compare(type) != 0){
-				tmp_stack.push(next_ele);
 			
 				// now that we've added the top of the 
 				// parse stack to our tmp stack, 
 				// remove the top of the parse stack
 				// and point next_ele to the next element	
-				parse_stack.pop();	
 				next_ele = parse_stack.top();	
+				parse_stack.pop();	
+				tmp_stack.push(next_ele);
 			}
 
+			TokenNode *tmp_head = next_ele;
+
+			// logging info for testing 
+			std::cout << "Match verifcation: " << std::endl;
+			std::cout << "head: " << tmp_head->getValue() << std::endl;
+			std::cout << "this: " << (*it)->getValue() << std::endl;
 			// by this point, tmp_stack contains all the 
 			// children of the element
 
-			TokenNode *ele_ptr = tmp_stack.top();
+			TokenNode *ele_ptr; //= tmp_stack.top();
+			
+			// pop that sonofabitch to get past the head
+			tmp_stack.pop();
+			
 			while(!tmp_stack.empty()){
-				(*it)->addChild(ele_ptr);
 
-				tmp_stack.pop();
 				ele_ptr = tmp_stack.top();
-
-			}	
+				tmp_stack.pop();
+				tmp_head->addChild(ele_ptr);
+		
+				std::cout << "Adding child " << ele_ptr->getValue() << " to parent " << tmp_head->getValue() << std::endl;
+			} 
+		
+			parse_stack.push(tmp_head);
+				
 		
 		}
 
 		else{
 			parse_stack.push(*it);			
 		}	
-	}	
+	}
+
+	return parse_stack.top();	
+
+	// hopefully we never get here!
+	// we will if the HTML doc does not contain 
+	// <html> </html> tags!
+	return nullptr;	
 
 }
 

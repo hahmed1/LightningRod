@@ -41,6 +41,7 @@ void clear()
  *
  * TODO remove
  */
+/*
 void add(std::string tag, std::string value)
 {
 	
@@ -51,7 +52,7 @@ void add(std::string tag, std::string value)
 	*out_file << tag << std::endl;
 	*out_file << value << std::endl;
 
-}
+} */
 
 /*
  * Smart tokens contain information so that no string comparison 
@@ -83,13 +84,14 @@ void clean_up()
 /* Deprecated
  *
  */
+/*
 void print()
 {
 	for(std::vector<token>::iterator it = html_stream->begin(); it != html_stream->end(); ++it){
 		std::cout << it->second << std::endl;
 	}
 }
-
+*/
 void smart_print()
 {
 	for(std::vector<smart_token>::iterator it = smart_stream->begin(); it != smart_stream->end(); ++it){
@@ -103,11 +105,12 @@ void smart_print()
  * Deprecated, use smart stream
  *
  */
+/*
 std::vector<token>* get_stream()
 {
 	return html_stream;
 }
-
+*/
 std::vector<smart_token>* get_smart_stream()
 {
 	return smart_stream;

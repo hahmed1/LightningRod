@@ -13,7 +13,7 @@ class TreeBuilder{
 	
 	public:
 		TreeBuilder();
-		TokenNode* construct(std::vector<smart_token> tokens);			
+		TokenNode* construct(std::vector<smart_token> *tokens);			
 
 };
 
