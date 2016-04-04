@@ -16,10 +16,14 @@ class TokenNode{
 		
 		bool isLeaf();
 		bool isClose();	
+		bool isText();
+		bool isImage();
 		std::string getType();
 		std::string getValue();
 		std::vector<TokenNode*> getChildren();
 		std::string* toString();
+
+
 };
 
 

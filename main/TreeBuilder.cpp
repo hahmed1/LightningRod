@@ -111,14 +111,6 @@ TokenNode* TreeBuilder::construct(std::vector<smart_token> *tok)
 			std::string type = (*it)->getType();
 			
 		
-			// if we've reached the HTML close tag, 
-			// we are done... no need to go any further.
-			/*
-			if(type == "HTML"){
-				return (*it);
-			} */
-		
-		
 			// our temporary stack (see above)
 			std::stack<TokenNode*> tmp_stack;
 
@@ -149,13 +141,17 @@ TokenNode* TreeBuilder::construct(std::vector<smart_token> *tok)
 			TokenNode *tmp_head = next_ele;
 
 			// logging info for testing 
+			/* 
 			std::cout << "Match verifcation: " << std::endl;
 			std::cout << "head: " << tmp_head->getValue() << std::endl;
 			std::cout << "this: " << (*it)->getValue() << std::endl;
+			*/
+
+
 			// by this point, tmp_stack contains all the 
 			// children of the element
 
-			TokenNode *ele_ptr; //= tmp_stack.top();
+			TokenNode *ele_ptr; 
 			
 			// pop that sonofabitch to get past the head
 			tmp_stack.pop();
@@ -165,8 +161,12 @@ TokenNode* TreeBuilder::construct(std::vector<smart_token> *tok)
 				ele_ptr = tmp_stack.top();
 				tmp_stack.pop();
 				tmp_head->addChild(ele_ptr);
-		
+	
+				// more logging
+				/*	
 				std::cout << "Adding child " << ele_ptr->getValue() << " to parent " << tmp_head->getValue() << std::endl;
+			
+			*/	
 			} 
 		
 			parse_stack.push(tmp_head);
@@ -180,11 +180,6 @@ TokenNode* TreeBuilder::construct(std::vector<smart_token> *tok)
 	}
 
 	return parse_stack.top();	
-
-	// hopefully we never get here!
-	// we will if the HTML doc does not contain 
-	// <html> </html> tags!
-	return nullptr;	
 
 }
 

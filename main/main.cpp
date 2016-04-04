@@ -291,6 +291,8 @@ int main( int argc, char **argv )
 	
 	//MAINLOOP
 	while(running){
+		
+		
 		SDL_SetRenderTarget(renderer, texture);
 		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
 		SDL_RenderClear(renderer);
