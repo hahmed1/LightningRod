@@ -33,8 +33,8 @@ class Font{
 		bool loadFromRenderedText( std::string , SDL_Color );
 
 		void render( int x, int y );
-		int getWidth();
-		int getHeight();
+		int getTextWidth();
+		int getTextHeight();
 };
 
 #endif

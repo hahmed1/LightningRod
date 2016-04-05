@@ -85,14 +85,11 @@ void PageView::renderText()
 	int x_pos = dx;
 	int y_pos = dy;
 
-//	std::string word_strs;
 	std::vector<Font*> words; 
 	std::vector<TextToken*> text = pvm->get_text_stream();	
 	for(std::vector<TextToken*>::iterator it = text.begin();
 			it != text.end();
 			++it){
-//		word_strs.append((*it)->getWord());
-//		word_strs.append(" ");	
 		std::string s;
 		s.append((*it)->getWord());
 		s.append(" ");
@@ -106,13 +103,22 @@ void PageView::renderText()
 	for(std::vector<Font*>::iterator it = words.begin();
 			it != words.end();
 			++it){
+	
+			
 		(*it)->render(x_pos, y_pos);
-		x_pos += 100;
-		y_pos += 25;
+
+		int textWidth = (*it)->getTextWidth();
+		int textHeight = (*it)->getTextHeight();
+		//TODO get rid of this magic number	
+		if(x_pos + textWidth + 30 < screen_w ){
+			x_pos += textWidth;
+		} else {
+			x_pos = dx;
+			y_pos += textHeight; 
+		}
 
 	}
 
-//	font->render(dx,dy);
 }
 void PageView::loopCall()
 {

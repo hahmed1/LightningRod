@@ -39,9 +39,11 @@ bool Font::loadFromRenderedText(std::string text, SDL_Color c)
 		else
 		{
 			//Get image dimensions
-			SDL_Log("Width and height set\n");
+//			SDL_Log("Width and height set\n");
 			iWidth = textSurface->w;
 			iHeight = textSurface->h;
+			
+
 		}
 
 		//Get rid of old surface
@@ -54,9 +56,15 @@ bool Font::loadFromRenderedText(std::string text, SDL_Color c)
 
 }
 
+int Font::getTextWidth()
+{
+	return iWidth;
+}
 
-
-
+int Font::getTextHeight()
+{
+	return iHeight;
+}
 void Font::render(int x, int y)
 {
 	SDL_Rect renderQuad = { x, y, iWidth , iHeight  };
