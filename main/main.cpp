@@ -1,6 +1,14 @@
 #include <SDL2/SDL.h>
 #include "PageView.h"
 #include "font.h"
+#include "PageViewModel.h"
+#include "TreeBuilder.h"
+#include "TokenNode.h"
+#include "stream.h"
+#include <string>
+#include <fstream>
+#include <streambuf>
+#include "lexer.lex.h"
 // global declaration
 
 #define TRUE  1
@@ -243,7 +251,7 @@ int main( int argc, char **argv )
 	SDL_Renderer *renderer;
 	SDL_Texture *texture;
 	PageView *pv;
-	
+	PageViewModel *pvm;	
 	//SETUP	
 	SDL_Init(SDL_INIT_VIDEO);
 
@@ -282,7 +290,37 @@ int main( int argc, char **argv )
 
 	
 	pv = new PageView(renderer, screen_w, screen_h);
+	pvm = new PageViewModel();	
 
+
+
+
+	
+	// TODO remove all of this eventually when I figure out a 
+	// better way 
+	std::ifstream t("sample.html");
+	std::string file_str((std::istreambuf_iterator<char>(t)),
+        std::istreambuf_iterator<char>());
+	
+	// initialize treebuilder	
+	TreeBuilder *builder = new TreeBuilder();
+	TokenNode *head_node;
+	
+	//initialize stream TODO: make a namespace or something
+	initialize();
+
+	// invoke lexer
+ 	YY_BUFFER_STATE cur_buff;
+ 	cur_buff = yy_scan_string(file_str.c_str());
+	yylex();
+	yy_delete_buffer(cur_buff);
+	
+	// get the stream and pass the head node to the builder
+	std::vector<smart_token> *sm_token_stream = get_smart_stream();
+	head_node = builder->construct(sm_token_stream);
+
+	pvm->setDocument(head_node);
+	pv->setPageViewModel(pvm);	
 
 	//font->loadFromRenderedText("LightningRod WebBrowser", green);
 
@@ -312,6 +350,9 @@ int main( int argc, char **argv )
 	TTF_Quit();
 //	IMG_Quit();
 //	SDL_Quit();
+
+	delete head_node;
+
 	printf("Process Complete, exiting \n");
 	return 0;
 

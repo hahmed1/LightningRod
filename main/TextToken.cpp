@@ -55,3 +55,9 @@ std::string TextToken::toString()
 	return s;
 
 }
+
+std::string TextToken::getWord()
+{
+	return word;
+}
+

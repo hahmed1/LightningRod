@@ -1,6 +1,8 @@
 #include "PageViewModel.h"
 
-
+//TODO test this with more elaborate trees to make sure that 
+// things 'trickle down' as they should, and don't 'trickle down'
+// as they shouldn't 
 void PageViewModel::traverse_tree(TokenNode *node, unsigned int flags)
 {
 	/*
@@ -57,6 +59,19 @@ PageViewModel::PageViewModel(TokenNode *doc_head)
 
 }
 
+//default constructor
+PageViewModel::PageViewModel()
+{
+
+}
+
+
+void PageViewModel::setDocument(TokenNode *doc_head)
+{
+	text_stream.clear();	
+	traverse_tree(doc_head, 0);	
+}
+
 void PageViewModel::save()
 {
 	std::ofstream save_file;
@@ -76,7 +91,10 @@ void PageViewModel::save()
 
 
 
-
+std::vector<TextToken*> PageViewModel::get_text_stream()
+{
+	return text_stream;
+}
 
 
 

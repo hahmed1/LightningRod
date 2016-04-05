@@ -35,12 +35,17 @@ class PageViewModel{
 
 	static const int para_link = para | link;
 
+	std::vector<TextToken*>::iterator top_word;
 
 
 	public:
 		PageViewModel(TokenNode *doc_head);
-		
+		PageViewModel();
+		void setDocument(TokenNode *doc_head);		
 		void save(); // TODO: implement serialization-like mech
+		
+		std::vector<TextToken*>::iterator getTopWord();
+		std::vector<TextToken*> get_text_stream();			
 
 };
 
