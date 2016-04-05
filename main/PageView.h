@@ -7,6 +7,7 @@
 #include "PageViewModel.h"
 #include "TextToken.h"
 #include <vector>
+#include "globals.h"
 class PageView
 {
 	//TODO add PageViewModel
@@ -21,10 +22,6 @@ class PageView
 	bool links;	
 	bool url;
 	
-	//This needs to go
-	Font *font;
-	Font *font_other;
-	Font *font_last;
 	PageViewModel *pvm;
 	std::vector<TextToken*> first_words;
 
@@ -33,13 +30,9 @@ class PageView
 	TextToken *top_word;  
 
 
-	TTF_Font *font1;
-
-	SDL_Color green   = { 0x00, 0xFF, 0x00 };
-	SDL_Color magenta = { 0xFF, 0x00, 0xFF };
-	SDL_Color blue    = { 0x00, 0xEE, 0xFF };
-	
-	void getTextFromModel();
+	TTF_Font *font1;    // the default font
+	TTF_Font *font2;    // the heading font
+		
 	void renderText();
 
 	// padding 

@@ -1,4 +1,5 @@
 #include "PageView.h"
+#include <iostream>
 PageView::PageView(SDL_Renderer *r, int w, int h)
 {
 
@@ -51,19 +52,18 @@ PageView::PageView(SDL_Renderer *r, int w, int h)
 
 
 	// Initialize fonts here
-	font1 = TTF_OpenFont("OpenSans-Bold.ttf", 16);	
-	
+	font1 = TTF_OpenFont("OpenSans-Bold.ttf", 14);	
+	font2 = TTF_OpenFont("OpenSans-Bold.ttf", 18);	
 	if(font1 != NULL){
-		SDL_Log("Font loaded");
+		SDL_Log("Font1 loaded");
 	}
-
+	if(font2 != NULL){
+		SDL_Log("Font2 loaded");
+	}
 	// Create the "Font" objects here.
 	// These really should not be called Font.
 	// They should be called "Word" or something likethat
 	// based on the way they are being used.  
-	font = new Font(renderer,font1,  30);
-	font_other = new Font(renderer, font1, 20);	
-	font_last = new Font(renderer, font1, -341);		
 	
 	//getTextFromModel();	
 	//TODO setup default view range
@@ -74,17 +74,11 @@ PageView::PageView(SDL_Renderer *r, int w, int h)
 }
 
 
-void PageView::getTextFromModel()
-{
-	font->loadFromRenderedText("This is some text!", green);
-
-}
-
 void PageView::renderText()
 {
 	int x_pos = dx;
 	int y_pos = dy;
-
+	int count = 0;
 	std::vector<Font*> words; 
 	std::vector<TextToken*> text = pvm->get_text_stream();	
 	for(std::vector<TextToken*>::iterator it = text.begin();
@@ -93,18 +87,51 @@ void PageView::renderText()
 		std::string s;
 		s.append((*it)->getWord());
 		s.append(" ");
+
 		
-		Font *cur = new Font(renderer, font1, 10);
-		cur->loadFromRenderedText(s, green);
-		words.push_back(cur);
+		//paragraph text branch	
+		if((*it)->is_para()){
+		
+			Font *cur = new Font(renderer, font1);
+			cur->loadFromRenderedText(s, col_green);
+			words.push_back(cur);
+		}
+
+		//link text branch
+		else if((*it)->is_link()){
+			Font *cur = new Font(renderer, font1);
+			cur->loadFromRenderedText(s, col_blue);	
+			words.push_back(cur);
+		}	
+		// heading text branch
+		else if((*it)->is_heading()){
+
+			Font *cur = new Font(renderer, font2);
+			cur->loadFromRenderedText(s, col_magenta);	
+			words.push_back(cur);
+		} 
+
 			
 	}
 
 	for(std::vector<Font*>::iterator it = words.begin();
 			it != words.end();
 			++it){
-	
-			
+		/*	
+		if((*it) == NULL){
+			std::cout << "WTF?" << std::endl;
+		}else {
+			std::cout << "iterator not null: " << std::endl;
+			std::cout << (*it) << std::endl;	
+
+		} */
+		
+		/*
+		SDL_Log("The Word: %s\n" , (*it)->getWord().c_str());
+		SDL_Log("Printing font information:\n");
+		SDL_Log("width: %d\n" , (*it)->getTextWidth());
+		SDL_Log("height: %d\n" , (*it)->getTextHeight());
+		*/
 		(*it)->render(x_pos, y_pos);
 
 		int textWidth = (*it)->getTextWidth();

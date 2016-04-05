@@ -1,28 +1,21 @@
 #include "font.h"
 
-Font::Font( SDL_Renderer *ren, TTF_Font *f, int sz )
+Font::Font( SDL_Renderer *ren, TTF_Font *f   )
 {
 	renderer = ren;
 	texture = NULL;
-	size = sz;
 	font = f;	
 	
 	//set defaults
-	rc = 0x00;
-	gc = 0xFF;
-	bc = 0x00;
-	ac = 0xFF;
 
-	bm = SDL_BLENDMODE_NONE;
-
-	//iWidth = 0;
-	//iHeight = 0;
+	iWidth = 0;
+	iHeight = 0;
 
 }
 bool Font::loadFromRenderedText(std::string text, SDL_Color c)
 {
 	free();
-
+	word = text;
 	SDL_Surface* textSurface = TTF_RenderText_Solid( font, text.c_str(), c );
 	if( textSurface == NULL )
 	{
@@ -39,11 +32,14 @@ bool Font::loadFromRenderedText(std::string text, SDL_Color c)
 		else
 		{
 			//Get image dimensions
-//			SDL_Log("Width and height set\n");
 			iWidth = textSurface->w;
 			iHeight = textSurface->h;
-			
-
+		
+			/*	
+			SDL_Log("Width and height set\n");
+			SDL_Log("Width: %d\n" , iWidth);
+			SDL_Log("Height: %d\n" , iHeight);
+			*/
 		}
 
 		//Get rid of old surface
@@ -68,6 +64,7 @@ int Font::getTextHeight()
 void Font::render(int x, int y)
 {
 	SDL_Rect renderQuad = { x, y, iWidth , iHeight  };
+
 	int val = SDL_RenderCopyEx( renderer, texture, NULL, &renderQuad, 0.0, NULL, SDL_FLIP_NONE);
 }
 
@@ -80,4 +77,9 @@ void Font::free()
 		iWidth = 0;
 		iHeight = 0;
 	}
+}
+
+std::string Font::getWord()
+{
+	return word;
 }

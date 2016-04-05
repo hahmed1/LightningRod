@@ -11,32 +11,25 @@ TextToken::TextToken(std::string w, unsigned int flags)
 {
 	word = w;
 	
-	/*
-	 * TODO finish this up
-	 */
-
 	// p branch
-	//
-	
+
+	_para = false;
+	_heading = false;
+	_link = false;
+
+
 	if( flags & para ){		
-		size = 10; 	
-		rc =   0x00;
-		gc =   0xFF;
-		bc =   0x00;
-		ac =   0xFF;
-		//font = 	
+		_para = true; 
 	}
 	// link branch 
 	if( flags & link){
-	
-		size = 10; 
-	
+		_link = true;
+
 	}
 
 	// heading branch 	
 	if( flags & head ){
-		
-		size = 20; 
+		_heading = true;	
 	}	
 
 
@@ -50,10 +43,8 @@ std::string TextToken::toString()
 	s.append("TextToken: \n");
 	s.append(word);
 	s.append("\n");
-	s.append("Size: " + std::to_string(size));
-	s.append("\n");
-	return s;
 
+	return s;
 }
 
 std::string TextToken::getWord()
@@ -61,3 +52,15 @@ std::string TextToken::getWord()
 	return word;
 }
 
+bool TextToken::is_para()
+{
+	return _para;
+}
+bool TextToken::is_heading()
+{
+	return _heading;
+}
+bool TextToken::is_link()
+{
+	return _link;
+}

@@ -9,18 +9,13 @@ class Font{
 	TTF_Font *font;
 	SDL_Texture* texture ;
 	SDL_Renderer* renderer;
-	Uint8 rc,gc,bc,ac;
-	SDL_BlendMode bm;
 	int iWidth, iHeight;
-
+	std::string word;
 	void free();
 	public:
-		Font( SDL_Renderer*, TTF_Font*, int );
+		Font( SDL_Renderer*, TTF_Font* );
 		~Font();
 		
-		void setColor( Uint8 red, Uint8 green, Uint8 blue );
-		void setBlendMode(SDL_BlendMode blendMode);
-		void setAlpha(Uint8 alpha);
 
 
 		/*IMP need to call this before render()
@@ -35,6 +30,8 @@ class Font{
 		void render( int x, int y );
 		int getTextWidth();
 		int getTextHeight();
+		std::string getWord();
+
 };
 
 #endif

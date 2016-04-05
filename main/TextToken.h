@@ -12,16 +12,11 @@
  */
 class TextToken{
 	std::string word;
-	int size;
-	Uint8 rc, gc, bc, ac;
-	TTF_Font *font;
 
-	/*	
-	bool para;
-	bool heading;
-	bool link;
-	*/	
-	
+	bool _para;
+	bool _heading;
+	bool _link;
+
 	//TODO DRY this code up...this currently exists in 2 different 
 	//places, here and PageViewModel
 	static const int para = 1 << 0;
@@ -34,10 +29,13 @@ class TextToken{
 		~TextToken();
 		int getNumLetters();
 		std::string getWord();
-		int getWidth(); 		//used by pageview to fit
-		int getHeight();
 
 		std::string toString();
+
+		bool is_para();
+	      	bool is_heading();
+		bool is_link();	
+
 };
 
 #endif

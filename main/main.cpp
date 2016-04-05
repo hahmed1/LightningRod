@@ -259,7 +259,7 @@ int main( int argc, char **argv )
 	
 
 
-	window = SDL_CreateWindow("LightningRod", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, screen_w, screen_h, SDL_WINDOW_OPENGL );
+	window = SDL_CreateWindow("LightningRod", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, screen_w, screen_h, (SDL_WINDOW_OPENGL ));
 
 	if( window == NULL ){
 		SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Failed to create window: %s\n" , SDL_GetError());
