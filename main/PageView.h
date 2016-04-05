@@ -39,6 +39,16 @@ class PageView
 	static const int dx = 15;
 	static const int dy = 5;
 
+	static const int font1_size = 14;
+	static const int font2_size = 18;
+	
+	// rendering position
+	int x_pos;
+	int y_pos;
+	
+	void new_line(int amt);
+	void advance_xpos(int amt);
+
 	//TODO add links data storage
 	
 	//TODO add a Color class with various colors 

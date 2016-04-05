@@ -52,8 +52,8 @@ PageView::PageView(SDL_Renderer *r, int w, int h)
 
 
 	// Initialize fonts here
-	font1 = TTF_OpenFont("OpenSans-Bold.ttf", 14);	
-	font2 = TTF_OpenFont("OpenSans-Bold.ttf", 18);	
+	font1 = TTF_OpenFont("OpenSans-Bold.ttf", font1_size);	
+	font2 = TTF_OpenFont("OpenSans-Bold.ttf", font2_size);	
 	if(font1 != NULL){
 		SDL_Log("Font1 loaded");
 	}
@@ -73,14 +73,25 @@ PageView::PageView(SDL_Renderer *r, int w, int h)
 
 }
 
+void PageView::new_line(int amt)
+{
+        x_pos = dx;	
+	y_pos += amt;
 
+}
+void PageView::advance_xpos(int amt)
+{
+	x_pos += amt;
+
+}
 void PageView::renderText()
 {
-	int x_pos = dx;
-	int y_pos = dy;
-	int count = 0;
+	x_pos = dx;
+	y_pos = dy;
 	std::vector<Font*> words; 
 	std::vector<TextToken*> text = pvm->get_text_stream();	
+	
+	
 	for(std::vector<TextToken*>::iterator it = text.begin();
 			it != text.end();
 			++it){
@@ -88,13 +99,13 @@ void PageView::renderText()
 		s.append((*it)->getWord());
 		s.append(" ");
 
-		
 		//paragraph text branch	
 		if((*it)->is_para()){
 		
 			Font *cur = new Font(renderer, font1);
 			cur->loadFromRenderedText(s, col_green);
 			words.push_back(cur);
+				
 		}
 
 		//link text branch
@@ -105,10 +116,10 @@ void PageView::renderText()
 		}	
 		// heading text branch
 		else if((*it)->is_heading()){
-
 			Font *cur = new Font(renderer, font2);
 			cur->loadFromRenderedText(s, col_magenta);	
 			words.push_back(cur);
+
 		} 
 
 			
@@ -117,31 +128,19 @@ void PageView::renderText()
 	for(std::vector<Font*>::iterator it = words.begin();
 			it != words.end();
 			++it){
-		/*	
-		if((*it) == NULL){
-			std::cout << "WTF?" << std::endl;
-		}else {
-			std::cout << "iterator not null: " << std::endl;
-			std::cout << (*it) << std::endl;	
-
-		} */
-		
-		/*
-		SDL_Log("The Word: %s\n" , (*it)->getWord().c_str());
-		SDL_Log("Printing font information:\n");
-		SDL_Log("width: %d\n" , (*it)->getTextWidth());
-		SDL_Log("height: %d\n" , (*it)->getTextHeight());
-		*/
+	
 		(*it)->render(x_pos, y_pos);
+
 
 		int textWidth = (*it)->getTextWidth();
 		int textHeight = (*it)->getTextHeight();
-		//TODO get rid of this magic number	
-		if(x_pos + textWidth + 30 < screen_w ){
-			x_pos += textWidth;
+
+			// TODO encapsulate into a function!
+		if((x_pos + textWidth + 30 < screen_w ) ){
+			//x_pos += textWidth;
+			advance_xpos(textWidth);
 		} else {
-			x_pos = dx;
-			y_pos += textHeight; 
+			new_line(textHeight);
 		}
 
 	}
