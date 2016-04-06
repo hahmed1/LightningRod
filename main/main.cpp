@@ -9,6 +9,7 @@
 #include <fstream>
 #include <streambuf>
 #include "lexer.lex.h"
+#include <iostream>
 // global declaration
 
 #define TRUE  1
@@ -298,7 +299,7 @@ int main( int argc, char **argv )
 	
 	// TODO remove all of this eventually when I figure out a 
 	// better way 
-	std::ifstream t("sample.html");
+	std::ifstream t("sample2.html");
 	std::string file_str((std::istreambuf_iterator<char>(t)),
         std::istreambuf_iterator<char>());
 	
@@ -317,6 +318,13 @@ int main( int argc, char **argv )
 	
 	// get the stream and pass the head node to the builder
 	std::vector<smart_token> *sm_token_stream = get_smart_stream();
+	/* logging 	
+	for(std::vector<smart_token>::iterator it = sm_token_stream->begin();
+			it != sm_token_stream->end();
+			++it){
+		std::cout << "tag type: " <<  it->first.first<< std::endl;		
+	} */
+
 	head_node = builder->construct(sm_token_stream);
 
 	pvm->setDocument(head_node);
@@ -351,7 +359,7 @@ int main( int argc, char **argv )
 //	IMG_Quit();
 //	SDL_Quit();
 
-	delete head_node;
+//	delete head_node;
 
 	printf("Process Complete, exiting \n");
 	return 0;

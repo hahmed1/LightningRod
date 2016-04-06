@@ -28,6 +28,8 @@ TokenNode* TreeBuilder::construct(std::vector<smart_token> *tok)
 	for(std::vector<smart_token>::iterator it = tokens.begin(); it != tokens.end(); ++it){
 		TokenNode *cur = new TokenNode(it->first.first, it->first.second, it->second);	
 		tokenStream->push_back(cur);	
+
+//		std::cout << *(cur->toString()) << std::endl;	
 	}
 
 	
@@ -114,40 +116,20 @@ TokenNode* TreeBuilder::construct(std::vector<smart_token> *tok)
 			// our temporary stack (see above)
 			std::stack<TokenNode*> tmp_stack;
 
+
+	 		TokenNode *next_ele;
 		
-			// the element at the top of the stack 
-			// note: the close tag never got added
-			// to the stack, so DO NOT pop here	
-			TokenNode *next_ele;// = parse_stack.top();
+			do{
 			
-			// assumption: open and close tags of the same 
-			// html-tag-type have the same "type" string 
-			//
-			// After this loop, next_ele should point to
-			// the matching open tag of the '*it' close tag.
-			//
-			// string comparison
-		        while(next_ele->getType().compare(type) != 0){
-			
-				// now that we've added the top of the 
-				// parse stack to our tmp stack, 
-				// remove the top of the parse stack
-				// and point next_ele to the next element	
 				next_ele = parse_stack.top();	
 				parse_stack.pop();	
 				tmp_stack.push(next_ele);
-			}
-
+	
+		
+			} while(next_ele->getType().compare(type) != 0);	
 			TokenNode *tmp_head = next_ele;
-
-			// logging info for testing 
-			/* 
-			std::cout << "Match verifcation: " << std::endl;
-			std::cout << "head: " << tmp_head->getValue() << std::endl;
-			std::cout << "this: " << (*it)->getValue() << std::endl;
-			*/
-
-
+			
+			
 			// by this point, tmp_stack contains all the 
 			// children of the element
 
@@ -155,7 +137,6 @@ TokenNode* TreeBuilder::construct(std::vector<smart_token> *tok)
 			
 			// pop that sonofabitch to get past the head
 			tmp_stack.pop();
-			
 			while(!tmp_stack.empty()){
 
 				ele_ptr = tmp_stack.top();
