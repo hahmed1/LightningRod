@@ -1,4 +1,3 @@
-#include <SDL2/SDL.h>
 #include "PageView.h"
 #include "font.h"
 #include "PageViewModel.h"
@@ -299,7 +298,7 @@ int main( int argc, char **argv )
 	
 	// TODO remove all of this eventually when I figure out a 
 	// better way 
-	std::ifstream t("sample2.html");
+	std::ifstream t("sample.html");
 	std::string file_str((std::istreambuf_iterator<char>(t)),
         std::istreambuf_iterator<char>());
 	
