@@ -40,8 +40,8 @@ class PageView
 	static const int dy = 5;
 
 	static const int font1_size = 14;
-	static const int font2_size = 18;
-	
+	static const int font2_size = 22;
+	static const int break_size = 40;	
 	// rendering position
 	int x_pos;
 	int y_pos;

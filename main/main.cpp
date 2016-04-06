@@ -320,15 +320,15 @@ int main( int argc, char **argv )
 	head_node = builder->construct(sm_token_stream);
 
 	pvm->setDocument(head_node);
+	pvm->save();
 	pv->setPageViewModel(pvm);	
 
 	//font->loadFromRenderedText("LightningRod WebBrowser", green);
 
 	running = TRUE;
 	cur_mode = LR_DEFAULT;
-	
 	//MAINLOOP
-	while(running){
+	while(running ){
 		
 		
 		SDL_SetRenderTarget(renderer, texture);

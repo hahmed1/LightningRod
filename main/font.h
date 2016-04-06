@@ -12,8 +12,11 @@ class Font{
 	int iWidth, iHeight;
 	std::string word;
 	void free();
+
+	int render_x;
+	int render_y;
 	public:
-		Font( SDL_Renderer*, TTF_Font* );
+		Font( SDL_Renderer*, TTF_Font*, int rx, int ry );
 		~Font();
 		
 
@@ -28,6 +31,7 @@ class Font{
 		bool loadFromRenderedText( std::string , SDL_Color );
 
 		void render( int x, int y );
+		void render();
 		int getTextWidth();
 		int getTextHeight();
 		std::string getWord();

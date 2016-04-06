@@ -16,7 +16,8 @@ class TextToken{
 	bool _para;
 	bool _heading;
 	bool _link;
-
+	
+	bool _break; 
 	//TODO DRY this code up...this currently exists in 2 different 
 	//places, here and PageViewModel
 	static const int para = 1 << 0;
@@ -26,6 +27,7 @@ class TextToken{
 
 	public:
 		TextToken(std::string w , unsigned int flags);
+		TextToken();
 		~TextToken();
 		int getNumLetters();
 		std::string getWord();
@@ -36,6 +38,7 @@ class TextToken{
 	      	bool is_heading();
 		bool is_link();	
 
+		bool is_break();
 };
 
 #endif

@@ -1,6 +1,6 @@
 #include "font.h"
 
-Font::Font( SDL_Renderer *ren, TTF_Font *f   )
+Font::Font( SDL_Renderer *ren, TTF_Font *f, int rx, int ry   )
 {
 	renderer = ren;
 	texture = NULL;
@@ -11,6 +11,8 @@ Font::Font( SDL_Renderer *ren, TTF_Font *f   )
 	iWidth = 0;
 	iHeight = 0;
 
+	render_x = rx;
+	render_y = ry;
 }
 bool Font::loadFromRenderedText(std::string text, SDL_Color c)
 {
@@ -68,6 +70,15 @@ void Font::render(int x, int y)
 	int val = SDL_RenderCopyEx( renderer, texture, NULL, &renderQuad, 0.0, NULL, SDL_FLIP_NONE);
 }
 
+void Font::render()
+{
+	SDL_Rect renderQuad = { render_x, render_y, iWidth , iHeight  };
+
+	int val = SDL_RenderCopyEx( renderer, texture, NULL, &renderQuad, 0.0, NULL, SDL_FLIP_NONE);
+
+
+}
+
 void Font::free()
 {
 	if( texture != NULL )
@@ -78,6 +89,8 @@ void Font::free()
 		iHeight = 0;
 	}
 }
+
+
 
 std::string Font::getWord()
 {

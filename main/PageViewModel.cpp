@@ -1,5 +1,5 @@
 #include "PageViewModel.h"
-
+#include <iostream>
 //TODO test this with more elaborate trees to make sure that 
 // things 'trickle down' as they should, and don't 'trickle down'
 // as they shouldn't 
@@ -42,10 +42,18 @@ void PageViewModel::traverse_tree(TokenNode *node, unsigned int flags)
 		std::vector<TokenNode*> children = node->getChildren();
 
 		for(std::vector<TokenNode*>::iterator it = children.begin();
-				it != children.end(); 
-				++it){
+			it != children.end(); 
+			++it){
 		
 				traverse_tree(*it , flags);	
+				//perhaps we enter a line-break here?
+				
+		}
+
+		if(cur_type == "P" || cur_type == "H1"){
+							
+			text_stream.push_back(new TextToken());	
+			//std::cout << "inside here" << std::endl;	
 		}	
 	
 	}

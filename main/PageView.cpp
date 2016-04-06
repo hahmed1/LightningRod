@@ -84,6 +84,7 @@ void PageView::advance_xpos(int amt)
 	x_pos += amt;
 
 }
+
 void PageView::renderText()
 {
 	x_pos = dx;
@@ -95,33 +96,67 @@ void PageView::renderText()
 	for(std::vector<TextToken*>::iterator it = text.begin();
 			it != text.end();
 			++it){
+		
 		std::string s;
 		s.append((*it)->getWord());
 		s.append(" ");
 
-		//paragraph text branch	
+
+		/* Position logging		
+		std::cout << "the current word: " << s << std::endl;
+		std::cout << "cursor position: " << std::endl;
+		std::cout << "xpos : " << x_pos << std::endl;
+	        std::cout << "ypos : " << y_pos << std::endl;
+		std::cout << "END" << std::endl;	
+		*/
+		int textWidth, textHeight;	
+		if((*it)->is_break()){
+			new_line(break_size);	
+		}
+
+		else{
+			//paragraph text branch	
 		if((*it)->is_para()){
 		
-			Font *cur = new Font(renderer, font1);
+			Font *cur = new Font(renderer, font1, x_pos, y_pos);
 			cur->loadFromRenderedText(s, col_green);
 			words.push_back(cur);
-				
+			textWidth = cur->getTextWidth();
+			textHeight = cur->getTextHeight();
+
+	
 		}
 
 		//link text branch
 		else if((*it)->is_link()){
-			Font *cur = new Font(renderer, font1);
+			Font *cur = new Font(renderer, font1, x_pos, y_pos);
 			cur->loadFromRenderedText(s, col_blue);	
 			words.push_back(cur);
+			textWidth = cur->getTextWidth();
+			textHeight = cur->getTextHeight();
+
+
 		}	
 		// heading text branch
 		else if((*it)->is_heading()){
-			Font *cur = new Font(renderer, font2);
+			Font *cur = new Font(renderer, font2, x_pos, y_pos);
 			cur->loadFromRenderedText(s, col_magenta);	
 			words.push_back(cur);
+			textWidth = cur->getTextWidth();
+			textHeight = cur->getTextHeight();
+
 
 		} 
 
+		if((x_pos + textWidth + 30 < screen_w ) ){
+			//x_pos += textWidth;
+			advance_xpos(textWidth);
+		} else {
+			new_line(textHeight);
+		}	
+		
+		}	
+		
 			
 	}
 
@@ -129,19 +164,14 @@ void PageView::renderText()
 			it != words.end();
 			++it){
 	
-		(*it)->render(x_pos, y_pos);
+		(*it)->render();
 
 
 		int textWidth = (*it)->getTextWidth();
 		int textHeight = (*it)->getTextHeight();
 
 			// TODO encapsulate into a function!
-		if((x_pos + textWidth + 30 < screen_w ) ){
-			//x_pos += textWidth;
-			advance_xpos(textWidth);
-		} else {
-			new_line(textHeight);
-		}
+		
 
 	}
 

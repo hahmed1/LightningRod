@@ -1,5 +1,13 @@
 #include "TextToken.h"
 
+/*
+ * For the default constructor, assume a "line break" token
+ *
+ */
+TextToken::TextToken()
+{
+	_break = true;
+}
 /* 
  * The flags are set by the tree_traversal algorithm in PageViewModel.
  *
@@ -16,7 +24,7 @@ TextToken::TextToken(std::string w, unsigned int flags)
 	_para = false;
 	_heading = false;
 	_link = false;
-
+	_break = false;
 
 	if( flags & para ){		
 		_para = true; 
@@ -41,9 +49,14 @@ std::string TextToken::toString()
 {
 	std::string s;
 	s.append("TextToken: \n");
-	s.append(word);
-	s.append("\n");
+	if( !is_break()){
+		s.append(word);
+		s.append("\n");
 
+	}
+	else{
+		s.append("linebreak\n");
+	}
 	return s;
 }
 
@@ -64,3 +77,10 @@ bool TextToken::is_link()
 {
 	return _link;
 }
+
+bool TextToken::is_break()
+{
+	return _break;
+}
+
+
