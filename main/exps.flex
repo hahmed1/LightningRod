@@ -199,28 +199,31 @@
 \<template\>
 \<\/template\>
 \<!doctype\ html\>
+\<!DOCTYPE\ html\>
+\<meta[^>]*\>
+\<\/meta\>
 \<head\>
 \<\/head\>
-
 \<html\>			  add("HTML" , yytext, 0);
 \<\/html\>			  add("HTML" , yytext, 1);	
-\<h1\>				  add("H1" , yytext, 0);
+\<h1[^>]*>			  add("H1" , yytext, 0);
 \<\/h1\>		          add("H1" , yytext, 1);
-\<p\> 				  add("P" , yytext, 0);
+\<p[^>]*\> 			  add("P" , yytext, 0);
 \<\/p\> 			  add("P", yytext, 1);
-\<body\>			  add("BODY", yytext, 0);
+\<body[^>]*\>			  add("BODY", yytext, 0);
 \<\/body\> 			  add("BODY", yytext, 1);
 [[:alnum:]\?;\.!@#$%\^&\*\\\=]+   add("TEXT" , yytext, 2);
-\<h2\>				  add("H1" , yytext, 0);
+\<h2[^>]*\>			  add("H1" , yytext, 0);
 \<\/h2\> 			  add("H1" , yytext, 1);
-\<h3\>				  add("H1" , yytext, 0);	
+\<h3[^>]*\>			  add("H1" , yytext, 0);	
 \<\/h3\> 			  add("H1" , yytext, 1);
-\<h4\> 			          add("H1" , yytext, 0);
+\<h4[^>]*\> 		          add("H1" , yytext, 0);
 \<\/h4\> 		    	  add("H1" , yytext, 1);
-\<h5\> 				  add("H1" , yytext, 0);
+\<h5[^>]*\> 			  add("H1" , yytext, 0);
 \<\/h5\>                          add("H1" , yytext, 1);
-\<h6\> 			    	  add("H1" , yytext, 0);
+\<h6[^>]*\> 		    	  add("H1" , yytext, 0);
 \<\/h6\> 		          add("H1" , yytext, 1);
+\<style[^>]*\> 
 %%
 
 
