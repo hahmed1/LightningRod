@@ -4,44 +4,45 @@
 
 %%
 \<!--[^\0]*--\>	
-\<base\>
+\<base[^>]*\>
 \<\/base\>
-\<style[^>]*\>[^\0]*\<\/style\> 			
-\<title\>
+\<style[^>]*\>
+\<\/style\>
+\<title[^>]*\>
 \<\/title\>
-\<address\>
+\<address[^>]*\>
 \<\/address\>
-\<article\>
+\<article[^>]*\>
 \<\/article\>
-\<footer\>
+\<footer[^>]*\>
 \<\/footer\>
-\<header\>
+\<header[^>]*\>
 \<\/header\>
-\<hgroup\>
+\<hgroup[^>]*\>
 \<\/hgroup\>
-\<nav\>
+\<nav[^>]*\>
 \<\/nav\>
-\<section\>
+\<section[^>]*\>
 \<\/section\>
-\<dd\>
+\<dd[^>]*\>
 \<\/dd\>
 \<div[^>]*\>			
 \<\/div.*\>		
-\<dl\>
+\<dl[^>]*\>
 \<\/dl\>
-\<dt\>
+\<dt[^>]*\>
 \<\/dt\>
-\<figcaption\>
+\<figcaption[^>]*\>
 \<\/figcaption\>
-\<figure\>
+\<figure[^>]*\>
 \<\/figure\>
-\<hr\>
+\<hr[^>]*\>
 \<\/hr\>
-\<li\>
+\<li[^>]*\>
 \<\/li\>
-\<main\>
+\<main[^>]*\>
 \<\/main\>
-\<ol\>
+\<ol[^>]*\>
 \<\/ol\>
 \<pre\>
 \<\/pre\>
@@ -223,7 +224,6 @@
 \<\/h5\>                          add("H1" , yytext, 1);
 \<h6[^>]*\> 		    	  add("H1" , yytext, 0);
 \<\/h6\> 		          add("H1" , yytext, 1);
-\<style[^>]*\> 
 %%
 
 
