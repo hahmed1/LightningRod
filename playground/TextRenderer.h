@@ -7,16 +7,16 @@
 #include <string>
 #include "Tag.h"
 #include <utility>
-typedef std::pair<int,int> ordererd_pair;
-typedef std::pair<SDL_Texture* , ordererd_pair> smart_texture;
+#include "SmartTexture.h"
 class TextRenderer{
 	
 	SDL_Renderer *renderer;
 	SDL_Texture  *texture;
 	SDL_Texture  *texture2;
 
-		
-	std::vector<smart_texture*> *surface_table;
+	//TODO make this into a class with a boolean field for
+	//line breaks	
+	std::vector<SmartTexture*> *surface_table;
 
 	TTF_Font *font1;
 	TTF_Font *font2;
@@ -29,7 +29,7 @@ class TextRenderer{
 	const SDL_Color col_green = {0x00, 0xFF, 0x00};
 	const SDL_Color col_blue  = {0x00, 0x22, 0xFF};
 	const SDL_Color col_mag   = {0xFF, 0x00, 0xFF};
-
+	const SDL_Color col_blank = {0x00, 0x00, 0x00};
 	int screen_w;
 	int screen_h;
 

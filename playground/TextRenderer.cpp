@@ -6,7 +6,7 @@ TextRenderer::TextRenderer(SDL_Renderer *r, int w, int h)
 {
 	renderer = r;
 
-	surface_table = new std::vector<smart_texture*>();
+	surface_table = new std::vector<SmartTexture*>();
 
 	screen_w = w;
 	screen_h = h;
@@ -107,15 +107,12 @@ void TextRenderer::walkTree(Tag *root)
 		}
 		else continue;
 		
-		std::string cur_text;	
 		for(std::vector<std::string>::iterator ut = text.begin();
 				ut != text.end();
 				++ut){
-			cur_text.append( *ut) ;
+			std::string cur_text = *ut;
 			cur_text.append(" ");	
-			
-		}
-		if(cur_type == HEADING){
+			if(cur_type == HEADING){
 				textSurface = TTF_RenderText_Blended(font2, cur_text.c_str(), col_mag);
 			}	
 			else if(cur_type == REGULAR){
@@ -129,11 +126,24 @@ void TextRenderer::walkTree(Tag *root)
 			cur_w = textSurface->w;
 			cur_h = textSurface->h;
 
-			ordererd_pair pos = std::pair<int, int>(cur_w, cur_h);
 			curTexture = SDL_CreateTextureFromSurface(renderer , textSurface);						
-			surface_table->push_back(new smart_texture(curTexture, pos));	
+			surface_table->push_back(new SmartTexture(cur_w, cur_h, curTexture , false));	
 			}
 
+		const char *blank = "BLANK TEXT\n"; 
+		textSurface = TTF_RenderText_Blended(font2, blank, col_blank);	
+		curTexture= SDL_CreateTextureFromSurface(renderer, textSurface );	
+		cur_w = textSurface->w;
+		cur_h = textSurface->h;
+
+		surface_table->push_back(new SmartTexture(cur_w, cur_h, curTexture, true));
+
+		std::cout << "how many times/ " << std::endl;
+
+
+
+	}
+	
 }
 
 
@@ -161,21 +171,34 @@ void TextRenderer::renderCall()
 	int cur_w;
 	int cur_h;
 		
-	for(std::vector<smart_texture*>::iterator it = surface_table->begin();
+	for(std::vector<SmartTexture*>::iterator it = surface_table->begin();
 			it != surface_table->end();
 			++it
 			){
-		cur_w = (*it)->second.first;
-		cur_h = (*it)->second.second;	
-		SDL_Rect curRect = {x_pos, y_pos, cur_w, cur_h};		
-		SDL_RenderCopyEx(renderer, (*it)->first, NULL, &curRect, 0.0, NULL, SDL_FLIP_NONE);
 
-		if(x_pos + cur_w + 30 < screen_w)
-			x_pos += cur_w;
-		else{
-			x_pos = 10;
-			y_pos += 10 + cur_h;
+		if(!(*it)->is_break()){
+			cur_w = (*it)->getWidth();
+			cur_h = (*it)->getHeight();	
+			SDL_Rect curRect = {x_pos, y_pos, cur_w, cur_h};		
+			SDL_RenderCopyEx(renderer, (*it)->getTexture(), NULL, &curRect, 0.0, NULL, SDL_FLIP_NONE);
+
+			if(x_pos + cur_w + 30 < screen_w)
+				x_pos += cur_w;
+			else{
+				x_pos = 10;
+				y_pos += 10 + cur_h;
+			}	
 		}
+		
+		//new line
+		/*
+		else{
+			x_pos += 10 + 100;
+			y_pos = 10;
+	
+			cur_w = (*it)->getWidth();
+			cur_h = (*it)->getHeight();
+		}*/	
 			
 	
 	}	
