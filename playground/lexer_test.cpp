@@ -66,13 +66,13 @@ int main()
 	 * no list elements!
 	 *
 	 */
-	std::vector<Tag*> *children = root->getChildren();
-	for(std::vector<Tag*>::iterator it = children->begin();
+	std::vector<tag*> *children = root->getchildren();
+	for(std::vector<tag*>::iterator it = children->begin();
 			it != children->end();
 			++it){
-		std::cout << "Cur internal node: " << (*it)->getValue() << std::endl;
-		NonLeafTag *cur = (NonLeafTag *)*it;
-		std::vector<std::string> text = cur->getTextChildren();
+		std::cout << "cur internal node: " << (*it)->getvalue() << std::endl;
+		nonleaftag *cur = (nonleaftag *)*it;
+		std::vector<std::string> text = cur->gettextchildren();
 		for(std::vector<std::string>::iterator ut = text.begin();
 				ut != text.end();
 				++ut){

@@ -1,5 +1,14 @@
 #include <SDL2/SDL.h>
 #include "TextRenderer.h"
+#include "DOMTreeBuilder.h"
+#include "StreamBuilder.h"
+#include "lex.yy.h"
+#include <fstream>
+#include <streambuf>
+#include <string>
+#include <iostream>
+
+
 bool cur_mode;
 bool running;
 
@@ -60,8 +69,33 @@ int main()
 
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND); 
 
-	
 
+
+	//TODO write a controller for user input
+		
+	// read in file to string 'file_str'
+	std::ifstream t("example.html");
+	std::string file_str((std::istreambuf_iterator<char>(t)),
+        std::istreambuf_iterator<char>());
+
+	std::ofstream outputfile;
+	outputfile.open("trun_lexer_output.txt");
+	// invoke lexer with the file string from above
+ 	YY_BUFFER_STATE cur_buff;
+ 	cur_buff = yy_scan_string(file_str.c_str());
+	yylex();
+	yy_delete_buffer(cur_buff);
+
+	std::vector<Tag*> *tags = StreamBuilder::getInstance().getTruncatedStream();
+
+	for(std::vector<Tag*>::iterator it = tags->begin(); 
+			it != tags->end();
+			++it){
+		outputfile  << (*it)->toString() << std::endl;
+	} 
+
+
+	Tag* root = DOMTreeBuilder::buildTree(tags);
 
 	texture = SDL_CreateTexture(renderer,
 		       	SDL_PIXELFORMAT_RGBA8888,
@@ -72,7 +106,7 @@ int main()
 	running = true;
 
 	TextRenderer *r = new TextRenderer(renderer, screen_w, screen_h);
-
+	r->walkTree(root);
 	// MAINLOOP
 	while( running ){
 
@@ -87,7 +121,7 @@ int main()
 		}	
 		
 		SDL_SetRenderTarget(renderer, texture);
-		SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0x00);
+		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
 		SDL_RenderClear(renderer);
 	//	input_controller(pv);
 		r->renderCall();		
