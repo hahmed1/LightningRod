@@ -66,25 +66,7 @@ Tag* DOMTreeBuilder::buildTree(std::vector<Tag*> *tag_stream )
 		}
 
 			
-		// list elements
-		//
-		// this is the toughest case to handle
-		// 
-		// THIS BRANCH ASSUMES THAT LIST ELEMENTS ARE CLOSED!
-		// if they are not closed, the builder is guaranteed to 
-		// crash
-		else if(cur_type == "LISTELE" && ((NonLeafTag *)*it)->is_opening() ){
-
-			// TODO throw an error if cur_par is not 
-			//  an ul or ol element
-			//
-
-			cur_par->addChild(*it);
-			parents.push(*it);	
-
-			logfile << "Adding list node " << (*it)->getValue() << " to parent " << cur_par->getValue() << ". " << std::endl;	
-
-		}
+		
 	
 		// if we get past the above if statment, 
 		// we can safely cast to a NonLeafTag type. 
