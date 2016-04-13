@@ -1,5 +1,6 @@
 #include "PlainTextTag.h"
 #include <iostream>
+#include <vector>
 PlainTextTag::PlainTextTag(const char * val)
 {
 	value = std::string(val);
@@ -32,4 +33,11 @@ std::string PlainTextTag::toString()
 std::string PlainTextTag::getType()
 {
 	return "TEXT";
+}
+
+std::vector<Tag*>* PlainTextTag::getChildren()
+{
+	//TODO throw error
+	std::cout << "Fatal error occured" << std::endl;
+	return nullptr;
 }

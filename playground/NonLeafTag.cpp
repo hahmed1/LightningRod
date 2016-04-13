@@ -40,3 +40,14 @@ std::string NonLeafTag::getType()
 {
 	return type;
 }
+
+bool NonLeafTag::is_opening()
+{
+	return open;
+}
+
+std::vector<Tag*>* NonLeafTag::getChildren()
+{
+	return children;
+
+}

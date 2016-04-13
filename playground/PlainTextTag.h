@@ -11,6 +11,7 @@ class PlainTextTag : public Tag{
 		std::string getValue();
 		std::string toString();
 		std::string getType();
+		std::vector<Tag*>* getChildren();
 };
 
 

@@ -50,6 +50,9 @@ std::vector<Tag*>* StreamBuilder::getTruncatedStream()
 	
 	for(; it != buffer->end(); ++it){
 		ret_val->push_back(*it);
+		// short circuit eval makes this not crash
+		if((*it)->getType() == "BODY" && !(((NonLeafTag *)*it)->is_opening()))
+			break;
 	}
 
 	return ret_val;

@@ -15,10 +15,13 @@ class NonLeafTag : public Tag {
 	public:
 		NonLeafTag(const char * , std::string , bool );
 		
-		virtual std::string getValue();
-		virtual void addChild(Tag *t);
+		std::string getValue();
+		void addChild(Tag *t);
 		std::string toString();
-		virtual std::string getType();
+		std::string getType();
+		bool is_opening();
+		std::vector<Tag*>* getChildren();
+
 };
 
 

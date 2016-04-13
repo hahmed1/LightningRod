@@ -4,6 +4,31 @@
 #include <streambuf>
 #include "StreamBuilder.h"
 #include "lex.yy.h"
+#include "DOMTreeBuilder.h"
+#include <fstream>
+
+void traverse(Tag* root)
+{
+	if(root == nullptr){
+		std::cout << "null ptr encountered" << std::endl;
+	}
+
+	std::string type = root->getType();
+	// base case
+	if(root->getType() == "TEXT"){
+		std::cout << root->getValue() << std::endl;
+	}
+
+	else{
+		std::vector<Tag*> *children = root->getChildren();
+		for(std::vector<Tag*>::iterator it = children->begin();
+				it != children->end();
+				++it){
+			traverse(*it);
+		}
+	}	
+}
+
 int main()
 {
 	// read in file to string 'file_str'
@@ -11,7 +36,8 @@ int main()
 	std::string file_str((std::istreambuf_iterator<char>(t)),
         std::istreambuf_iterator<char>());
 
-
+	std::ofstream outputfile;
+	outputfile.open("trun_lexer_output.txt");
 	// invoke lexer with the file string from above
  	YY_BUFFER_STATE cur_buff;
  	cur_buff = yy_scan_string(file_str.c_str());
@@ -23,15 +49,13 @@ int main()
 	for(std::vector<Tag*>::iterator it = tags->begin(); 
 			it != tags->end();
 			++it){
-		std::cout << (*it)->toString() << std::endl;
-	}
+		outputfile  << (*it)->toString() << std::endl;
+	} 
 
-	/* StreamBuilder class test */	
-	//StreamBuilder st_in = StreamBuilder::getInstance();
+		
+	Tag* root = DOMTreeBuilder::buildTree(tags);
 
 
-//	StreamBuilder::getInstance().add("hello, wolrd");
-//	StreamBuilder::getInstance().add("this is some text");
-//	StreamBuilder::getInstance().writebuf();
-//	StreamBuilder::getInstance().clear();
+	/* tree traversal */
+	traverse(root);	
 }
