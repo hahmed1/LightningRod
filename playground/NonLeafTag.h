@@ -3,7 +3,7 @@
 #include "Tag.h"
 #include <vector>
 #include <utility>
-
+#include <string>
 typedef std::pair<std::string , std::string> attribute;
 
 class NonLeafTag : public Tag {
@@ -21,7 +21,8 @@ class NonLeafTag : public Tag {
 		std::string getType();
 		bool is_opening();
 		std::vector<Tag*>* getChildren();
-
+		std::vector<std::string > getTextChildren();
+		
 };
 
 

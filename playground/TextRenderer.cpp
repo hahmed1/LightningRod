@@ -60,6 +60,8 @@ TextRenderer::TextRenderer(SDL_Renderer *r, int w, int h)
 	
 }
 
+
+
 void TextRenderer::renderCall()
 {
 	SDL_Rect renderQuad  = { 0, 0, img_w, img_h};

@@ -5,12 +5,18 @@
 #include <SDL2_ttf/SDL_ttf.h>
 #include <SDL2/SDL.h>
 #include <string>
+#include "Tag.h"
 
+#define LISTSIZE 1000
 class TextRenderer{
 	
 	SDL_Renderer *renderer;
 	SDL_Texture  *texture;
 	SDL_Texture  *texture2;
+
+	SDL_Texture textures[LISTSIZE];
+		
+
 
 	TTF_Font *font1;
 	TTF_Font *font2;
@@ -31,8 +37,10 @@ class TextRenderer{
 	public:
 		TextRenderer(SDL_Renderer *r, int w, int h);
 		void renderCall();
-};
+		void walkTree(Tag *root);
 
+
+};
 
 #endif
 

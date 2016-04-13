@@ -57,5 +57,34 @@ int main()
 
 
 	/* tree traversal */
-	traverse(root);	
+//	traverse(root);	
+
+
+
+	/*
+	 * This kind of traversal only works if there are 
+	 * no list elements!
+	 *
+	 */
+	std::vector<Tag*> *children = root->getChildren();
+	for(std::vector<Tag*>::iterator it = children->begin();
+			it != children->end();
+			++it){
+		std::cout << "Cur internal node: " << (*it)->getValue() << std::endl;
+		NonLeafTag *cur = (NonLeafTag *)*it;
+		std::vector<std::string> text = cur->getTextChildren();
+		for(std::vector<std::string>::iterator ut = text.begin();
+				ut != text.end();
+				++ut){
+		
+			std::cout << *ut << " ";
+		}
+
+		std::cout << std::endl;
+		std::cout << "----------" << std::endl;
+	}	
+
+
+
+
 }

@@ -51,3 +51,18 @@ std::vector<Tag*>* NonLeafTag::getChildren()
 	return children;
 
 }
+
+std::vector<std::string> NonLeafTag::getTextChildren()
+{
+	std::vector<std::string> text;
+		
+	for(std::vector<Tag*>::iterator it = children->begin();
+			it != children->end();
+			++it){
+	
+		text.push_back((*it)->getValue());
+	}
+
+	return text;
+
+}
