@@ -166,9 +166,11 @@ void TextRenderer::renderCall()
 	x_pos = dx;
 	y_pos = dy;
 
-	int cur_w;
-	int cur_h;
-		
+	int cur_w ;
+	int cur_h ;
+	
+	int prev_w = 0;
+	int prev_h = 0;	
 	for(std::vector<SmartTexture*>::iterator it = surface_table->begin();
 			it != surface_table->end();
 			++it
@@ -177,32 +179,41 @@ void TextRenderer::renderCall()
 		if(!(*it)->is_break()){
 			cur_w = (*it)->getWidth();
 			cur_h = (*it)->getHeight();	
-			SDL_Rect curRect = {x_pos, y_pos, cur_w, cur_h};		
-
-			if(x_pos + cur_w + 30 < screen_w)
+			
+			if(x_pos + cur_w  < screen_w - dx){
+			
+				SDL_Rect curRect = {x_pos, y_pos, cur_w, cur_h};		
+		
+				SDL_RenderCopyEx(renderer, (*it)->getTexture(), NULL, &curRect, 0.0, NULL, SDL_FLIP_NONE);
+		
+				log_render_info(*it, x_pos, y_pos);
 				x_pos += cur_w;
+			
+			}
 			else{
 				x_pos = dx;
-				y_pos += dy + cur_h;
-			}	
-			
-			log_render_info(*it, x_pos, y_pos);
-
-			SDL_RenderCopyEx(renderer, (*it)->getTexture(), NULL, &curRect, 0.0, NULL, SDL_FLIP_NONE);
-		}
+				y_pos += cur_h;
 		
+				SDL_Rect curRect = {x_pos, y_pos, cur_w, cur_h};		
+				SDL_RenderCopyEx(renderer, (*it)->getTexture(), NULL, &curRect, 0.0, NULL, SDL_FLIP_NONE);
+				log_render_info(*it, x_pos, y_pos);
+		
+				x_pos += cur_w;
+		
+			}
+			
+
+				
+
+		}
+				
 		//new line
 		else{
-		//	x_pos += 10 + 100;
-		//	y_pos = 10;
 		
 
 			cur_h = (*it)->getHeight();
 			x_pos = dx;
 			y_pos += dy + cur_h;
-
-
-			cur_w = (*it)->getWidth();
 
 			log_render_info(*it, x_pos, y_pos);
 		}	
