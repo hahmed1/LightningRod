@@ -271,8 +271,13 @@ void TextRenderer::renderCall()
 	}
 
 	else if(cur_mode == LR_URL){
-		SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0xFF, 0x00);
-		SDL_RenderFillRect(renderer, &url_bar);
+		SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0x00);
+		SDL_Surface *rectSurface = SDL_CreateRGBSurface(0,url_bar.w, url_bar.h, 0, 0xf000000, 0x00ff0000, 0x0000ff00, 0x000000ff);
+		SDL_Texture *text = SDL_CreateTextureFromSurface(renderer, rectSurface);
+		SDL_RenderCopyEx(renderer,text, NULL, &url_bar, 0.0, NULL, SDL_FLIP_NONE);
+
+
+
 	}	
 
 	else if(cur_mode == LR_LINKS){
