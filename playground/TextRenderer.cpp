@@ -154,15 +154,16 @@ void TextRenderer::walkTree(Tag *root)
 
 
 	}
-		doc_head = surface_table->begin();
-		first_words->push_back(*doc_head);
+
+		/* Setup all the important stuff */
+		int position = 0;
 
 		setupDoc();
 }
 
 
 /*
- * This gets called when a page is first rendered.
+ * This gets called when a page is first created.
  *
  *
  */
@@ -222,7 +223,8 @@ void TextRenderer::setupDoc()
 
 	}
 
-
+	
+	doc_head = first_words->begin();
 }
 
 void TextRenderer::log_render_info(SmartTexture *s, int x, int y)
@@ -251,8 +253,24 @@ void TextRenderer::renderCall()
 
 	int cur_w ;
 	int cur_h ;
+	
+	std::vector<SmartTexture*>::iterator it = surface_table->begin(); 
+	for(;
+			it != surface_table->end();
+			++it){
 
-	for(std::vector<SmartTexture*>::iterator it = doc_head;
+		if(*it == *doc_head )
+			break;
+	
+	}
+	
+	/*
+	 * Need to do a search with the iterators
+	 *
+	 */
+
+
+	for(;
 			it != surface_table->end();
 			++it
 			){
@@ -298,3 +316,20 @@ void TextRenderer::renderCall()
 
 	}
 }
+
+void TextRenderer::shiftDown()
+{
+	// check for valid position
+	if(position + 1 < surface_table->size() - 1){
+		position += 1;
+		doc_head++;	
+	
+	}
+}
+
+
+
+
+
+
+

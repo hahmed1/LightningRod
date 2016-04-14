@@ -61,6 +61,14 @@ class TextRenderer{
 		void walkTree(Tag *root);
 		void printFirstWords();
 
+
+		void shiftUp();
+		void shiftDown();
+		
+		/* Invariant: position in range [0, size - 1] 
+		 * where size is size of surface_table
+		 * */		
+		int position;
 };
 
 #endif

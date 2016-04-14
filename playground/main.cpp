@@ -120,6 +120,17 @@ int main()
 				break;
 		
 			}
+			else if( event.type == SDL_KEYDOWN ){
+			switch( event.key.keysym.sym ){
+
+				case SDLK_j:
+					SDL_Log("j key pressed\n");
+					r->shiftDown();
+					
+
+			}
+
+			}	
 		}	
 		
 		SDL_SetRenderTarget(renderer, texture);
