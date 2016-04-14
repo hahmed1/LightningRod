@@ -125,12 +125,11 @@ int main()
 		SDL_SetRenderTarget(renderer, texture);
 		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
 		SDL_RenderClear(renderer);
-		
+		r->renderCall();		
 		SDL_SetRenderTarget(renderer, NULL);
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
 		SDL_RenderPresent(renderer);				
 	}
-	r->printFirstWords();
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 //	TTF_Quit();

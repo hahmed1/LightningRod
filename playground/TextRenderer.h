@@ -54,10 +54,10 @@ class TextRenderer{
 	int dx;
 	int dy;
 
+	void setupDoc();	
 	public:
 		TextRenderer(SDL_Renderer *r, int w, int h);
 		void renderCall();
-		void setupDoc();	
 		void walkTree(Tag *root);
 		void printFirstWords();
 
