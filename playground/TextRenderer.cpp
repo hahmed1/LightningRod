@@ -13,7 +13,7 @@ TextRenderer::TextRenderer(SDL_Renderer *r, int w, int h)
 	renderer = r;
 
 	surface_table = new std::vector<SmartTexture*>();
-
+	first_words   = new std::vector<SmartTexture*>();
 	screen_w = w;
 	screen_h = h;
 
@@ -92,6 +92,9 @@ void TextRenderer::walkTree(Tag *root)
 	int cur_h;
 
 	font_type cur_type;
+
+	
+	
 	/*
 	 * Loop invariant: text holds the current internal node's
 	 * text children
@@ -152,7 +155,10 @@ void TextRenderer::walkTree(Tag *root)
 
 
 	}
-	
+		doc_head = surface_table->begin();
+		first_words->push_back(*doc_head);
+
+		setupDoc();	
 }
 
 
@@ -161,7 +167,7 @@ void TextRenderer::walkTree(Tag *root)
  *
  *
  */
-void TextRenderer::renderCall()
+void TextRenderer::setupDoc()
 {
 	x_pos = dx;
 	y_pos = dy;
@@ -171,12 +177,20 @@ void TextRenderer::renderCall()
 	
 	int prev_w = 0;
 	int prev_h = 0;	
+
+
 	for(std::vector<SmartTexture*>::iterator it = surface_table->begin();
 			it != surface_table->end();
 			++it
 			){
+		
+		if(x_pos == dx){
+			first_words->push_back(*it);	
+		}
+		
 
 		if(!(*it)->is_break()){
+			
 			cur_w = (*it)->getWidth();
 			cur_h = (*it)->getHeight();	
 			
@@ -199,18 +213,15 @@ void TextRenderer::renderCall()
 				log_render_info(*it, x_pos, y_pos);
 		
 				x_pos += cur_w;
-		
 			}
-			
 
-				
-
+		
+		
+		
 		}
 				
 		//new line
 		else{
-		
-
 			cur_h = (*it)->getHeight();
 			x_pos = dx;
 			y_pos += dy + cur_h;
@@ -218,9 +229,9 @@ void TextRenderer::renderCall()
 			log_render_info(*it, x_pos, y_pos);
 		}	
 			
-	
-	}	
+	}
 
+	
 
 }
 
@@ -229,6 +240,20 @@ void TextRenderer::log_render_info(SmartTexture *s, int x, int y)
 	
 	logfile << "Rendering " << s->getWord() << " at x: " << x << " , y: " << y << std::endl;
 }
+
+void TextRenderer::printFirstWords()
+{
+	for(std::vector<SmartTexture*>::iterator it = first_words->begin();
+			it != first_words->end();
+			++it){
+
+		std::cout << (*it)->getWord() << std::endl;
+					
+	}
+
+
+}
+
 
 
 

@@ -107,8 +107,10 @@ int main()
 
 	TextRenderer *r = new TextRenderer(renderer, screen_w, screen_h);
 	r->walkTree(root);
+	
 	// MAINLOOP
-	while( running ){
+	int count = 0;
+	while( running && count< 1 ){
 
 		//TODO input handling
 		SDL_Event event;
@@ -123,14 +125,12 @@ int main()
 		SDL_SetRenderTarget(renderer, texture);
 		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
 		SDL_RenderClear(renderer);
-	//	input_controller(pv);
-		r->renderCall();		
 		
 		SDL_SetRenderTarget(renderer, NULL);
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
 		SDL_RenderPresent(renderer);				
 	}
-
+	r->printFirstWords();
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 //	TTF_Quit();

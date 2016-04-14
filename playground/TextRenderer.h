@@ -18,7 +18,10 @@ class TextRenderer{
 	//TODO make this into a class with a boolean field for
 	//line breaks	
 	std::vector<SmartTexture*> *surface_table;
+	std::vector<SmartTexture*> *first_words;
 
+	// a pointer to the top-leftmost word in the document
+	std::vector<SmartTexture*>::iterator doc_head;
 	TTF_Font *font1;
 	TTF_Font *font2;
 
@@ -54,8 +57,9 @@ class TextRenderer{
 	public:
 		TextRenderer(SDL_Renderer *r, int w, int h);
 		void renderCall();
+		void setupDoc();	
 		void walkTree(Tag *root);
-
+		void printFirstWords();
 
 };
 
