@@ -12,10 +12,24 @@ TextRenderer::TextRenderer(SDL_Renderer *r, int w, int h)
 
 	renderer = r;
 
+	//SET Url bar params	
+	url_bar.x = 0;
+	url_bar.y = 0;
+	url_bar.w = screen_w;
+	url_bar.h = screen_h  / 8;	
+
+	//SET links bar params
+	
+	int box_length = 200;
+
+	links_bar.x = screen_w - box_length ;
+	links_bar.y = screen_h - box_length ;
+	links_bar.w = box_length;
+	links_bar.h = box_length;
+
+	
 	surface_table = new std::vector<SmartTexture*>();
 	first_words   = new std::vector<SmartTexture*>();
-	screen_w = w;
-	screen_h = h;
 
 	int img_flags = IMG_INIT_PNG;
 
@@ -246,7 +260,34 @@ void TextRenderer::printFirstWords()
 
 }
 
+/*
+ * Gets called ny main
+ */
 void TextRenderer::renderCall()
+{
+		
+	if(cur_mode ==  LR_DEFAULT ){
+		renderPage();
+	}
+
+	else if(cur_mode == LR_URL){
+		SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0xFF, 0x00);
+		SDL_RenderFillRect(renderer, &url_bar);
+	}	
+
+	else if(cur_mode == LR_LINKS){
+		SDL_SetRenderDrawColor(renderer, 0x00, 0x80, 0xFF, 0x00);
+		SDL_RenderFillRect(renderer, &links_bar);
+	
+
+	}
+
+			
+		
+
+}
+
+void TextRenderer::renderPage()
 {
 	x_pos = dx;
 	y_pos = dy;
@@ -340,7 +381,10 @@ void TextRenderer::shiftUp()
 	}
 }
 
-
+void TextRenderer::setMode(LR_MODE mode)
+{
+	cur_mode = mode;
+}
 
 
 

@@ -1,6 +1,6 @@
 #ifndef TEXTRENDERER_H
 #define TEXTRENDERER_H
-
+#include "globals.h"
 #include <SDL2_image/SDL_image.h>
 #include <SDL2_ttf/SDL_ttf.h>
 #include <SDL2/SDL.h>
@@ -29,13 +29,14 @@ class TextRenderer{
 	static const int font2_size = 25;
 	static const int break_size = 40;
 
+	SDL_Rect url_bar;
+	SDL_Rect links_bar;
+
 
 	const SDL_Color col_green = {0x00, 0xFF, 0x00};
 	const SDL_Color col_blue  = {0x00, 0x22, 0xFF};
 	const SDL_Color col_mag   = {0xFF, 0x00, 0xFF};
 	const SDL_Color col_blank = {0x00, 0x00, 0x00};
-	int screen_w;
-	int screen_h;
 
 	int img_w;
 	int img_h;
@@ -55,12 +56,16 @@ class TextRenderer{
 	int dy;
 
 	void setupDoc();	
+	void renderPage();
+
+	LR_MODE cur_mode;
 	public:
 		TextRenderer(SDL_Renderer *r, int w, int h);
 		void renderCall();
 		void walkTree(Tag *root);
 		void printFirstWords();
-
+	
+		void setMode(LR_MODE);
 
 		void shiftUp();
 		void shiftDown();

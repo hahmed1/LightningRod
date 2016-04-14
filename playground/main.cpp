@@ -7,21 +7,10 @@
 #include <streambuf>
 #include <string>
 #include <iostream>
-
+#include "globals.h"
 
 bool cur_mode;
 bool running;
-
-static const int screen_w = 720;
-static const int screen_h = 720;
-
-enum LR_MODES
-{
-	LR_DEFAULT,
-	LR_LINKS,
-	LR_URL
-
-};
 
 enum KEYS
 {
@@ -50,7 +39,7 @@ int main()
 	SDL_Log("SDL Initialized");
 
 	// ASSIGNMENTS
-	window = SDL_CreateWindow("LightningRod", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, screen_w, screen_h, (SDL_WINDOW_OPENGL  ));
+	window = SDL_CreateWindow("LightningRod", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, screen_w, screen_h, (SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI ));
 
 	if( window == NULL ){
 		SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Failed to create window: %s\n" , SDL_GetError());
@@ -107,7 +96,7 @@ int main()
 
 	TextRenderer *r = new TextRenderer(renderer, screen_w, screen_h);
 	r->walkTree(root);
-	
+	r->setMode(LR_DEFAULT);	
 	// MAINLOOP
 	int count = 0;
 	while( running && count< 1 ){
@@ -122,7 +111,11 @@ int main()
 			}
 			else if( event.type == SDL_KEYDOWN ){
 			switch( event.key.keysym.sym ){
-
+				
+				case SDLK_q:
+					SDL_Log("q key pressed\n");
+					r->setMode(LR_DEFAULT);	
+				break;	
 				case SDLK_j:
 					SDL_Log("j key pressed\n");
 					r->shiftDown();
@@ -131,6 +124,20 @@ int main()
 					SDL_Log("k key pressed\n");
 					r->shiftUp();
 				break;
+			
+				case SDLK_l:
+					SDL_Log("l key pressed\n");
+					r->setMode(LR_LINKS);
+				break;
+		
+				case SDLK_ESCAPE:
+					running = false;
+				break;	
+
+
+				case SDLK_SPACE:
+					SDL_Log("space bar pressed\n");
+					r->setMode(LR_URL);
 			}
 
 			}	
