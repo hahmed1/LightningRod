@@ -4,6 +4,12 @@
 
 TextRenderer::TextRenderer(SDL_Renderer *r, int w, int h)
 {
+	dx = 10;
+	dy = 10;
+
+	x_pos = dx;
+	y_pos = dy;	
+
 	renderer = r;
 
 	surface_table = new std::vector<SmartTexture*>();
@@ -37,6 +43,9 @@ TextRenderer::TextRenderer(SDL_Renderer *r, int w, int h)
 	if(font2 != NULL){
 		SDL_Log("Font2 loaded");
 	}
+
+	// Set log file
+	logfile.open("render-info.txt");
 
 	// TEST
 	//
@@ -106,7 +115,7 @@ void TextRenderer::walkTree(Tag *root)
 			cur_type = LINK;	
 		}
 		else continue;
-		
+	
 		for(std::vector<std::string>::iterator ut = text.begin();
 				ut != text.end();
 				++ut){
@@ -127,7 +136,7 @@ void TextRenderer::walkTree(Tag *root)
 			cur_h = textSurface->h;
 
 			curTexture = SDL_CreateTextureFromSurface(renderer , textSurface);						
-			surface_table->push_back(new SmartTexture(cur_w, cur_h, curTexture , false));	
+			surface_table->push_back(new SmartTexture(cur_w, cur_h, curTexture , false, cur_text ));	
 			}
 
 		const char *blank = "BLANK TEXT\n"; 
@@ -136,7 +145,7 @@ void TextRenderer::walkTree(Tag *root)
 		cur_w = textSurface->w;
 		cur_h = textSurface->h;
 
-		surface_table->push_back(new SmartTexture(cur_w, cur_h, curTexture, true));
+		surface_table->push_back(new SmartTexture(cur_w, cur_h, curTexture, true, "BLANK"));
 
 		std::cout << "how many times/ " << std::endl;
 
@@ -147,27 +156,16 @@ void TextRenderer::walkTree(Tag *root)
 }
 
 
-
 /*
+ * This gets called when a page is first rendered.
+ *
+ *
+ */
 void TextRenderer::renderCall()
 {
-	SDL_Rect renderQuad  = { 0, 0, img_w, img_h};
-	SDL_Rect renderQuad2 = { 0, 40+ img_h, img_w2, img_h2};
-	int val = SDL_RenderCopyEx( renderer, texture, NULL, &renderQuad, 0.0, NULL, SDL_FLIP_NONE);
+	x_pos = dx;
+	y_pos = dy;
 
-	SDL_RenderCopyEx( renderer, texture2, NULL, &renderQuad2, 0.0, NULL, SDL_FLIP_NONE);
-
-
-}
-
-*/
-
-void TextRenderer::renderCall()
-{
-	int x_pos = 10;
-	int y_pos = 10;
-	
-	
 	int cur_w;
 	int cur_h;
 		
@@ -180,25 +178,34 @@ void TextRenderer::renderCall()
 			cur_w = (*it)->getWidth();
 			cur_h = (*it)->getHeight();	
 			SDL_Rect curRect = {x_pos, y_pos, cur_w, cur_h};		
-			SDL_RenderCopyEx(renderer, (*it)->getTexture(), NULL, &curRect, 0.0, NULL, SDL_FLIP_NONE);
 
 			if(x_pos + cur_w + 30 < screen_w)
 				x_pos += cur_w;
 			else{
-				x_pos = 10;
-				y_pos += 10 + cur_h;
+				x_pos = dx;
+				y_pos += dy + cur_h;
 			}	
+			
+			log_render_info(*it, x_pos, y_pos);
+
+			SDL_RenderCopyEx(renderer, (*it)->getTexture(), NULL, &curRect, 0.0, NULL, SDL_FLIP_NONE);
 		}
 		
 		//new line
-		/*
 		else{
-			x_pos += 10 + 100;
-			y_pos = 10;
-	
-			cur_w = (*it)->getWidth();
+		//	x_pos += 10 + 100;
+		//	y_pos = 10;
+		
+
 			cur_h = (*it)->getHeight();
-		}*/	
+			x_pos = dx;
+			y_pos += dy + cur_h;
+
+
+			cur_w = (*it)->getWidth();
+
+			log_render_info(*it, x_pos, y_pos);
+		}	
 			
 	
 	}	
@@ -206,19 +213,11 @@ void TextRenderer::renderCall()
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+void TextRenderer::log_render_info(SmartTexture *s, int x, int y)
+{
+	
+	logfile << "Rendering " << s->getWord() << " at x: " << x << " , y: " << y << std::endl;
+}
 
 
 

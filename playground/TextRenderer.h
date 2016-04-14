@@ -8,6 +8,7 @@
 #include "Tag.h"
 #include <utility>
 #include "SmartTexture.h"
+#include <fstream>
 class TextRenderer{
 	
 	SDL_Renderer *renderer;
@@ -38,6 +39,17 @@ class TextRenderer{
 
 	int img_w2;
 	int img_h2;
+
+	/* Logging */
+	void log_render_info(SmartTexture *, int , int);
+	std::ofstream logfile;
+
+	int x_pos;
+	int y_pos;	
+
+	// padding horizontal & vertical margin
+	int dx;
+	int dy;
 
 	public:
 		TextRenderer(SDL_Renderer *r, int w, int h);
