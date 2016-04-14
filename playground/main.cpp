@@ -126,8 +126,11 @@ int main()
 				case SDLK_j:
 					SDL_Log("j key pressed\n");
 					r->shiftDown();
-					
-
+				break;	
+				case SDLK_k:
+					SDL_Log("k key pressed\n");
+					r->shiftUp();
+				break;
 			}
 
 			}	

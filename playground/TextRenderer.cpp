@@ -317,6 +317,11 @@ void TextRenderer::renderCall()
 	}
 }
 
+
+/*
+ * TODO: check that these can't be crashed!
+ *
+ */
 void TextRenderer::shiftDown()
 {
 	// check for valid position
@@ -327,7 +332,13 @@ void TextRenderer::shiftDown()
 	}
 }
 
-
+void TextRenderer::shiftUp()
+{
+	if(position - 1 >= 0){
+		position -= 1;
+		doc_head--;
+	}
+}
 
 
 
