@@ -12,14 +12,14 @@ TextRenderer::TextRenderer(SDL_Renderer *r, int w, int h)
 
 	renderer = r;
 
-	//SET Url bar params	
+	//SET Url bar params
 	url_bar.x = 0;
 	url_bar.y = 0;
 	url_bar.w = screen_w;
-	url_bar.h = screen_h  / 8;	
+	url_bar.h = screen_h  / 8;
 
 	//SET links bar params
-	
+
 	int box_length = 200;
 
 	links_bar.x = screen_w - box_length ;
@@ -27,7 +27,7 @@ TextRenderer::TextRenderer(SDL_Renderer *r, int w, int h)
 	links_bar.w = box_length;
 	links_bar.h = box_length;
 
-	
+
 	surface_table = new std::vector<SmartTexture*>();
 	first_words   = new std::vector<SmartTexture*>();
 
@@ -237,7 +237,7 @@ void TextRenderer::setupDoc()
 
 	}
 
-	
+
 	doc_head = first_words->begin();
 }
 
@@ -265,7 +265,7 @@ void TextRenderer::printFirstWords()
  */
 void TextRenderer::renderCall()
 {
-		
+
 	if(cur_mode ==  LR_DEFAULT ){
 		renderPage();
 	}
@@ -276,17 +276,17 @@ void TextRenderer::renderCall()
 
 
 
-	}	
+	}
 
 	else if(cur_mode == LR_LINKS){
 		SDL_SetRenderDrawColor(renderer, 0x00, 0x80, 0xFF, 0x00);
 		SDL_RenderFillRect(renderer, &links_bar);
-	
+
 
 	}
 
-			
-		
+
+
 
 }
 
@@ -297,17 +297,17 @@ void TextRenderer::renderPage()
 
 	int cur_w ;
 	int cur_h ;
-	
-	std::vector<SmartTexture*>::iterator it = surface_table->begin(); 
+
+	std::vector<SmartTexture*>::iterator it = surface_table->begin();
 	for(;
 			it != surface_table->end();
 			++it){
 
 		if(*it == *doc_head )
 			break;
-	
+
 	}
-	
+
 	/*
 	 * Need to do a search with the iterators
 	 *
@@ -371,8 +371,8 @@ void TextRenderer::shiftDown()
 	// check for valid position
 	if(position + 1 < surface_table->size() - 1){
 		position += 1;
-		doc_head++;	
-	
+		doc_head++;
+
 	}
 }
 
@@ -388,6 +388,3 @@ void TextRenderer::setMode(LR_MODE mode)
 {
 	cur_mode = mode;
 }
-
-
-

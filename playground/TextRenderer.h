@@ -10,13 +10,13 @@
 #include "SmartTexture.h"
 #include <fstream>
 class TextRenderer{
-	
+
 	SDL_Renderer *renderer;
 	SDL_Texture  *texture;
 	SDL_Texture  *texture2;
 
 	//TODO make this into a class with a boolean field for
-	//line breaks	
+	//line breaks
 	std::vector<SmartTexture*> *surface_table;
 	std::vector<SmartTexture*> *first_words;
 
@@ -49,32 +49,32 @@ class TextRenderer{
 	std::ofstream logfile;
 
 	int x_pos;
-	int y_pos;	
+	int y_pos;
 
 	// padding horizontal & vertical margin
 	int dx;
 	int dy;
 
-	void setupDoc();	
+	void setupDoc();
 	void renderPage();
 
 	LR_MODE cur_mode;
+	void handleInput();
 	public:
 		TextRenderer(SDL_Renderer *r, int w, int h);
 		void renderCall();
 		void walkTree(Tag *root);
 		void printFirstWords();
-	
+
 		void setMode(LR_MODE);
 
 		void shiftUp();
 		void shiftDown();
-		
-		/* Invariant: position in range [0, size - 1] 
+
+		/* Invariant: position in range [0, size - 1]
 		 * where size is size of surface_table
-		 * */		
+		 * */
 		int position;
 };
 
 #endif
-
