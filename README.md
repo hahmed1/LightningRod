@@ -1,4 +1,4 @@
-# Introducting LightningRod
+# Introducing LightningRod
 
 LightningRod is an HTML-only web browswer.  It is inteded to serve as an educational project for myself. 
 
